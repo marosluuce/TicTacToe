@@ -1,10 +1,10 @@
-#def xy_to_i(x, y, width)
-#	0
-#end
-
 class Board
 	attr_reader :squares
-	
+    
+    def self.tic_tac_toe
+        self.new(3, 3)
+    end
+
 	def initialize(length, width)
 		@squares = Array.new(length * width) 
 	end

@@ -1,18 +1,9 @@
-require "tictactoe"
-
-#describe "xy_to_i" do
-#	it "converts (0, 0, 0) to 0" do
-#		index = xy_to_i(0, 0, 0)
-#		index.should == 0	
-#	end
-#	it "converts (1, 1, 2) to " do
-#	end
-#end
+require "board"
 
 describe Board do
-  let(:length) { 3 }
+    let(:length) { 3 }
 	let(:width) { 3 }
-  let(:b) { Board.new(length, width) }
+    let(:b) { Board.new(length, width) }
 	
 	it "creates a board with two arguments" do
 		b.should be_an_instance_of Board
@@ -42,4 +33,11 @@ describe Board do
 			b.get_square(0).should == :x
 		end
 	end
+
+    describe "self.tic_tac_toe" do
+        it "returns a 3x3 board" do
+            t = Board.tic_tac_toe
+            t.squares.count.should == 9
+        end
+    end
 end
