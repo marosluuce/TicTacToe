@@ -1,18 +1,75 @@
 require "game"
-require "board"
+require "player"
 
 describe Game do
-    let(:g) { Game.new }
+  let(:g) { Game.new }
 
-    it "has a tictactoe board" do
-        g.board.should be_an_instance_of Board
-        g.board.squares.count.should == 9
-        # Should probably be checking that
-        # Board.tic_tac_toe is called instead
+  it "has a tictactoe board" do
+    g.board.length.should == 3
+    g.board.width.should == 3
+  end
+  it "creates at least one player" do
+    g.players.count.should > 1
+    g.players.each do |p|
+      p.should be_an_instance_of Player
     end
-    it "has at least one player" do
-        # This also is wrong. Nothing is checking
-        # that I am actually making players.:
-        g.players.count.should be > 1
+  end
+
+  describe "#move" do
+    it "gets the move" do
+      g.should_receive(:get_move) { "1" }
+      g.move
     end
+    it "validates the move" do
+      g.stub(:get_move) { "1" }
+      g.should_receive(:validate_move) { true }
+      g.move
+    end
+    it "does the move" do
+      g.should_receive(:do_move)
+      g.stub(:validate_move) { true }
+      g.stub(:get_move) { "1" }
+      g.move
+    end
+    it "loops until it gets valid input" do
+      g.stub(:validate_move).and_return(false, true)
+      g.stub(:get_move) { "1" }
+      g.should_receive(:validate_move).twice
+      g.move
+    end
+  end
+
+  describe "#do_move" do
+    it "makes a move" do
+      g.do_move(0, :x)
+      g.board.squares[0].should == :x
+    end
+    it "returns false for an invalid move" do
+      g.do_move(9000, :x).should eq(false)
+    end
+  end
+
+  describe "#get_move" do
+    before(:each) do
+      g.players.first.stub(:get_input) { "1" }
+      g.board.stub(:get_available_squares) { [1] }
+    end
+    it "gets the current players move" do
+      g.players.first.should_receive(:get_input)
+      g.get_move.should == "1"
+    end
+  end
+
+  describe "#validate_move" do
+    it "gets the available squares from the board" do
+      g.board.should_receive(:get_available_squares) { [1, 2] }
+      g.validate_move("1")
+    end
+    it "returns false if move is not a number" do
+      g.validate_move("a").should eq(false)
+    end
+    it "returns true when move is in the available squares" do
+      g.validate_move("1").should eq(true)
+    end
+  end
 end
