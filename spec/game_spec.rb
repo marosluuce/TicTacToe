@@ -1,5 +1,6 @@
 require "game"
 require "player"
+require "input"
 
 describe Game do
   let(:g) { Game.new }
@@ -50,12 +51,9 @@ describe Game do
   end
 
   describe "#get_move" do
-    before(:each) do
-      g.players.first.stub(:get_input) { "1" }
-      g.board.stub(:get_available_squares) { [1] }
-    end
     it "gets the current players move" do
-      g.players.first.should_receive(:get_input)
+      Input.stub(:get_console_input) { "1" } 
+      Input.should_receive(:get_console_input) { "1" }
       g.get_move.should == "1"
     end
   end

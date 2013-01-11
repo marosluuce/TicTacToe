@@ -11,13 +11,6 @@ describe Player do
     p.should respond_to :sym
   end
   it "returns the correct symbol" do
-    p.sym.should == sym	
-  end
-
-  describe "#get_input" do
-    it "returns the player's input" do
-      p.stub(:gets).and_return("123")
-      p.get_input.should == "123"
-    end
+    p.sym.should == sym
   end
 end

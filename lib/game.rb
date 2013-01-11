@@ -1,5 +1,6 @@
 require "board"
 require "player"
+require "input"
 
 SYMBOLS = [:x, :o]
 
@@ -23,7 +24,7 @@ class Game
   end
 
   def get_move
-    @players.first.get_input
+    Input.get_console_input
   end
 
   def validate_move(move)

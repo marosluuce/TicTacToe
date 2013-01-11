@@ -4,8 +4,4 @@ class Player
   def initialize(sym)
     @sym = sym
   end
-
-  def get_input
-    gets.chomp
-  end
 end
