@@ -54,4 +54,50 @@ describe Board do
       b.get_available_squares.should eq([0,1,2,4,5,6,7,8])
     end
   end
+
+  describe "#to_s" do
+    context "board with one square" do
+      before(:each) do
+        @t = Board.new(1,1)
+      end
+
+      it "returns a blank when the square is blank" do
+        @t.to_s.should == " "
+      end
+      it "returns the value when the square has a value" do
+        @t.set_square(0, :x)
+        @t.to_s.should == "x"
+      end
+    end
+
+    context "board with two squares |_|_|" do
+      before(:each) do
+        @t = Board.new(1, 2)
+      end
+
+      it "returns ' | ' for two empty squares" do
+        @t.to_s.should == " | "
+      end
+
+      it "returns \"x|o\" for [:x, :o]" do
+        @t.set_square(0, :x)
+        @t.set_square(1, :o)
+        @t.to_s.should == "x|o"
+      end
+    end
+
+    context "board with two sqoares in a column" do
+      it "returns ' \\n---\\n '" do
+        @t = Board.new(2, 1)
+        @t.to_s.should == " \n---\n "
+      end
+    end
+
+    context "board with n squares in a row" do
+      it "works for 1x6 board" do
+        @t = Board.new(1, 6)
+        @t.to_s.should == " | | | | | "
+      end
+    end
+  end
 end
