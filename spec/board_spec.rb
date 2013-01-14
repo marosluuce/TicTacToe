@@ -61,8 +61,8 @@ describe Board do
         @t = Board.new(1,1)
       end
 
-      it "returns a blank when the square is blank" do
-        @t.to_s.should == " "
+      it "returns the square choice when the square is blank" do
+        @t.to_s.should == "1"
       end
       it "returns the value when the square has a value" do
         @t.set_square(0, :x)
@@ -75,8 +75,8 @@ describe Board do
         @t = Board.new(1, 2)
       end
 
-      it "returns ' | ' for two empty squares" do
-        @t.to_s.should == " | "
+      it "returns '1|2' for two empty squares" do
+        @t.to_s.should == "1|2"
       end
 
       it "returns \"x|o\" for [:x, :o]" do
@@ -87,21 +87,49 @@ describe Board do
     end
 
     context "board with two squares in a column" do
-      it "returns ' \\n---\\n '" do
+      it "returns '1\\n---\\n2'" do
         @t = Board.new(2, 1)
-        @t.to_s.should == " \n-\n "
+        @t.to_s.should == "1\n-\n2"
       end
     end
 
     context "board with n squares" do
       it "works for 1x6 board" do
         @t = Board.new(1, 6)
-        @t.to_s.should == " | | | | | "
+        @t.to_s.should == "1|2|3|4|5|6"
       end
       it "works for 3x3 board" do
         @t = Board.new(3, 3)
-        @t.to_s.should == " | | \n-----\n | | \n-----\n | | "
+        @t.to_s.should == "1|2|3\n-----\n4|5|6\n-----\n7|8|9"
       end
+    end
+  end
+
+  describe "#full?" do
+    it "returns false when all squares are empty" do
+      b.full?.should eq(false)
+    end
+    it "returns false when some squares are full" do
+      b.set_square(1, :x)
+      b.full?.should eq(false)
+    end
+    it "returns true when all squares are full" do
+      fill_board_with_symbol(b, :x)
+      b.full?.should eq(true)
+    end
+  end
+
+  describe "#game_over?" do
+    it "returns false when board is not full" do
+      b.game_over?.should eq(false)
+    end
+    it "returns true when board is full" do
+      fill_board_with_symbol(b, :x)
+      b.game_over?.should eq(true)
+    end
+    it "returns true when the first row contains the same symbol" do
+      (1..width).each { |n| b.set_square(n, :x) }
+      b.game_over?.should eq(true)
     end
   end
 end

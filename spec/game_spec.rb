@@ -1,6 +1,7 @@
 require "game"
 require "player"
 require "input"
+require "display"
 
 describe Game do
   let(:g) { Game.new }
@@ -71,7 +72,7 @@ describe Game do
     end
   end
 
-  describe "#run" do
+  describe "#turn" do
     it "calls the move, update, and draw in order" do
       g.should_receive(:move).ordered
       g.should_receive(:update).ordered
@@ -80,11 +81,21 @@ describe Game do
     end
   end
 
+  describe "#run" do
+  end
+
   describe "#update" do
     it "rotates the players after every move" do
       player_one = g.players.first
       g.update
       g.players.last.should == player_one
+    end
+  end
+
+  describe "#draw" do
+    it "prints the board" do
+      Display.should_receive(:display).with(g.board)
+      g.draw
     end
   end
 end

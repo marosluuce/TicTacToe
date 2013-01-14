@@ -1,6 +1,7 @@
 require "board"
 require "player"
 require "input"
+require "display"
 
 SYMBOLS = [:x, :o]
 
@@ -32,6 +33,10 @@ class Game
   end
 
   def run
+    turn
+  end
+
+  def turn
     move
     update
     draw
@@ -42,6 +47,6 @@ class Game
   end
 
   def draw
-
+    Display.display(@board)
   end
 end
