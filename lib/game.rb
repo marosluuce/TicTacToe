@@ -28,13 +28,20 @@ class Game
   end
 
   def validate_move(move)
-    found = false
-    @board.get_available_squares.each do |s|
-      if s.to_s == move
-        found = true
-        break
-      end
-    end
-    found
+    @board.get_available_squares.include? move.to_i
+  end
+
+  def run
+    move
+    update
+    draw
+  end
+
+  def update
+    @players.rotate!
+  end
+
+  def draw
+
   end
 end

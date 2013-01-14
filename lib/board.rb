@@ -12,6 +12,7 @@ class Board
   end
 
   def set_square(i, val)
+    i -= 1
     if i < @squares.count && @squares[i].nil?
       @squares[i] = val
     else
@@ -22,25 +23,19 @@ class Board
   def get_available_squares
     avail = []
     @squares.each_with_index do |x, i|
-      avail << i unless x
+      avail << (i + 1) if x.nil?
     end
     avail
   end
 
   def to_s
     string = ""
-
-    @squares.each_slice(@width) do |line|
-    end.each_slice(@width) do |line|
-      string << line.join('|')
-      string << "\n#{"---" * @width}\n"
+    @squares.map do |s|
+      s.nil? ? " " : s
+    end.each_slice(@width).with_index do |line, i|
+      string << line.join("|")
+      string << "\n#{"-" * (@width * 2 - 1)}\n" unless i == @length - 1
     end
-
-#    @squares.each_with_index do |s, i|
-#      string << (s ? s.to_s : " ")
-#      string << "|" unless i == @width - 1
-#      string << "\n#{"---" * @width}\n" unless i / @length == @length - 1
-#    end
     string
   end
 end

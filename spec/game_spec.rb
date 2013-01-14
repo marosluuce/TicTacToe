@@ -42,7 +42,7 @@ describe Game do
 
   describe "#do_move" do
     it "makes a move" do
-      g.do_move(0, :x)
+      g.do_move(1, :x)
       g.board.squares[0].should == :x
     end
     it "returns false for an invalid move" do
@@ -68,6 +68,23 @@ describe Game do
     end
     it "returns true when move is in the available squares" do
       g.validate_move("1").should eq(true)
+    end
+  end
+
+  describe "#run" do
+    it "calls the move, update, and draw in order" do
+      g.should_receive(:move).ordered
+      g.should_receive(:update).ordered
+      g.should_receive(:draw).ordered
+      g.run
+    end
+  end
+
+  describe "#update" do
+    it "rotates the players after every move" do
+      player_one = g.players.first
+      g.update
+      g.players.last.should == player_one
     end
   end
 end

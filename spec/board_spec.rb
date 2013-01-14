@@ -24,16 +24,16 @@ describe Board do
 
   describe "#set_square" do
     it "sets the square to value" do
-      b.set_square(0, :x)
+      b.set_square(1, :x)
       b.squares[0].should == :x
     end
     it "only sets the value if the square is empty" do
-      b.set_square(0, :x)
-      b.set_square(0, :o).should eq(false) 
+      b.set_square(1, :x)
+      b.set_square(1, :o).should eq(false) 
       b.squares[0].should == :x
     end
     it "returns false for an invalid index" do
-      b.set_square(length * width, :x).should eq(false)
+      b.set_square(length * width + 1, :x).should eq(false)
     end
   end
 
@@ -49,9 +49,9 @@ describe Board do
       fill_board_with_symbol(b, :x)
       b.get_available_squares.should eq([])
     end
-    it "returns [0,1,2,4,5,6,7,8] when 3 is taken" do
+    it "returns [1,2,4,5,6,7,8,9] when 3 is taken" do
       b.set_square(3, :x)
-      b.get_available_squares.should eq([0,1,2,4,5,6,7,8])
+      b.get_available_squares.should eq([1,2,4,5,6,7,8,9])
     end
   end
 
@@ -80,23 +80,27 @@ describe Board do
       end
 
       it "returns \"x|o\" for [:x, :o]" do
-        @t.set_square(0, :x)
-        @t.set_square(1, :o)
+        @t.set_square(1, :x)
+        @t.set_square(2, :o)
         @t.to_s.should == "x|o"
       end
     end
 
-    context "board with two sqoares in a column" do
+    context "board with two squares in a column" do
       it "returns ' \\n---\\n '" do
         @t = Board.new(2, 1)
-        @t.to_s.should == " \n---\n "
+        @t.to_s.should == " \n-\n "
       end
     end
 
-    context "board with n squares in a row" do
+    context "board with n squares" do
       it "works for 1x6 board" do
         @t = Board.new(1, 6)
         @t.to_s.should == " | | | | | "
+      end
+      it "works for 3x3 board" do
+        @t = Board.new(3, 3)
+        @t.to_s.should == " | | \n-----\n | | \n-----\n | | "
       end
     end
   end
