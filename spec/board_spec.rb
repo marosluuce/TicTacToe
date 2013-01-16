@@ -119,16 +119,74 @@ describe Board do
     end
   end
 
+  describe "#winner" do
+    it "returns nil if no winner is found" do
+      b.winner.should == nil
+    end
+    it "returns the symbol when the first row contains the same symbol" do
+      (1..width).each { |n| b.set_square(n, :x) }
+      b.winner.should == :x
+    end
+    it "returns the symbol when the last row contains the same symbol" do
+      (1..width).each { |n| b.set_square(n + width * 2, :x)}
+      b.winner.should == :x
+    end
+    it "returns the symbol when the first column contains the same symbol" do
+      (0...width).each { |n| b.set_square(n * width, :x)}
+      b.winner.should == :x
+    end
+    it "returns the symbol when the last column contains the same symbol" do
+      (0...width).each { |n| b.set_square(n * width + width - 1, :x) }
+      b.winner.should == :x
+    end
+    it "returns the symbol when the left diag contains the same symbol" do
+      (0...width).each { |n| b.set_square(n * width + n + 1, :x) }
+      b.winner.should == :x
+    end
+    it "returns the symbol when the right diag contains the same symbol" do
+      (1..width).each { |n| b.set_square(n * width - (n - 1), :x) }
+      b.winner.should == :x
+    end
+    it "returns nil when row does not contain the same symbols" do
+      (1..width).each do |n|
+        sym = n.even? ? :x : :o
+        b.set_square(n, sym)
+      end
+      b.winner.should be_nil
+    end
+    it "returns nil when a col does not contain the same symbols" do
+      (0...width).each do |n|
+        sym = n.even? ? :x : :o
+        b.set_square(n * width, sym)
+      end
+      b.winner.should be_nil
+    end
+    it "returns nil when the left diag does not contain the same symbol" do
+      (0...width).each do |n|
+        sym = n.even? ? :x : :o
+        b.set_square(n * width + n + 1, sym)
+      end
+      b.winner.should be_nil
+    end
+    it "returns nil when the right diag does not contain the same symbol" do
+      (1..width).each do |n|
+        sym = n.even? ? :x : :o
+        b.set_square(n * width - (n - 1), sym)
+      end
+      b.winner.should be_nil
+    end
+  end
+
   describe "#game_over?" do
-    it "returns false when board is not full" do
+    it "returns false when board is empty" do
       b.game_over?.should eq(false)
     end
     it "returns true when board is full" do
       fill_board_with_symbol(b, :x)
       b.game_over?.should eq(true)
     end
-    it "returns true when the first row contains the same symbol" do
-      (1..width).each { |n| b.set_square(n, :x) }
+    it "returns true when winner is not nil" do
+      b.stub(:winner) { :x }
       b.game_over?.should eq(true)
     end
   end

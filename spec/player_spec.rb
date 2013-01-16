@@ -7,7 +7,7 @@ describe Player do
   it "creates a player" do
     p.should be_an_instance_of Player
   end
-    it "has a symbol" do
+  it "has a symbol" do
     p.should respond_to :sym
   end
   it "returns the correct symbol" do

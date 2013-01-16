@@ -44,9 +44,37 @@ class Board
   end
 
   def game_over?
-    val = @squares.select.with_index do |s, i|
-      i / @width == 0 
-    end.uniq
-    (val.count == 1 && !val.first.nil?) || full?
+    !winner.nil? || full?
+  end
+
+  def winner
+    winning_player = nil
+    (0...@width).each do |n|
+      horiz = @squares.select.with_index { |s, i| i / @width == n }.uniq
+      if horiz.count == 1 && !horiz.first.nil?
+        winning_player = horiz.first
+        break
+      end
+      vert = @squares.select.with_index { |s, i| i % @width == n }.uniq
+      if vert.count == 1 && !vert.first.nil?
+        winning_player = vert.first
+        break
+      end
+      l_diag = @squares.select.with_index do |s, i|
+        i / @width == i % @width
+      end.uniq
+      if l_diag.count == 1 && !l_diag.first.nil?
+        winning_player = l_diag.first
+        break
+      end
+      r_diag = @squares.select.with_index do |s, i|
+        i % (@width - 1) == 0 && i != 0 && i != (@squares.count - 1)
+      end.uniq
+      if r_diag.count == 1 && !r_diag.first.nil?
+        winning_player = r_diag.first
+        break
+      end
+    end
+    winning_player
   end
 end

@@ -77,11 +77,17 @@ describe Game do
       g.should_receive(:move).ordered
       g.should_receive(:update).ordered
       g.should_receive(:draw).ordered
-      g.run
+      g.turn
     end
   end
 
   describe "#run" do
+    it "is game over after the function runs" do
+      Input.stub(:get_console_input) { g.board.get_available_squares.first }
+      Display.stub(:display)
+      g.run
+      g.board.game_over?.should eq(true)
+    end
   end
 
   describe "#update" do

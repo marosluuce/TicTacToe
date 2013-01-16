@@ -1,7 +1,7 @@
-require "board"
-require "player"
-require "input"
-require "display"
+require_relative "board"
+require_relative "player"
+require_relative "input"
+require_relative "display"
 
 SYMBOLS = [:x, :o]
 
@@ -19,6 +19,7 @@ class Game
 
   def move
     begin
+      Display.display("Enter your move: ")
       move = get_move
     end while not validate_move(move)
     do_move(move, @players.first.sym)
@@ -33,7 +34,9 @@ class Game
   end
 
   def run
-    turn
+    until @board.game_over?
+      turn
+    end
   end
 
   def turn
