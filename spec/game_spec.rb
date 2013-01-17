@@ -12,30 +12,28 @@ describe Game do
   end
   it "creates at least one player" do
     g.players.count.should > 1
-    g.players.each do |p|
-      p.should be_an_instance_of Player
-    end
   end
 
   describe "#move" do
+    before(:each) do
+      g.stub(:get_move) { "1" }
+    end
+
     it "gets the move" do
       g.should_receive(:get_move) { "1" }
       g.move
     end
     it "validates the move" do
-      g.stub(:get_move) { "1" }
       g.should_receive(:validate_move) { true }
       g.move
     end
     it "does the move" do
-      g.should_receive(:do_move)
+      g.should_receive(:do_move).with("1", :x)
       g.stub(:validate_move) { true }
-      g.stub(:get_move) { "1" }
       g.move
     end
     it "loops until it gets valid input" do
       g.stub(:validate_move).and_return(false, true)
-      g.stub(:get_move) { "1" }
       g.should_receive(:validate_move).twice
       g.move
     end
@@ -53,15 +51,14 @@ describe Game do
 
   describe "#get_move" do
     it "gets the current players move" do
-      Input.stub(:get_console_input) { "1" } 
-      Input.should_receive(:get_console_input) { "1" }
-      g.get_move.should == "1"
+      g.players.first.should_receive(:get_move)
+      g.get_move
     end
   end
 
   describe "#validate_move" do
     it "gets the available squares from the board" do
-      g.board.should_receive(:get_available_squares) { [1, 2] }
+      g.board.should_receive(:available_squares) { [1, 2] }
       g.validate_move("1")
     end
     it "returns false if move is not a number" do
@@ -69,6 +66,13 @@ describe Game do
     end
     it "returns true when move is in the available squares" do
       g.validate_move("1").should eq(true)
+    end
+  end
+
+  describe "#request_move" do
+    it "calls Input.request_move" do
+      Input.should_receive(:request_move)
+      g.request_move
     end
   end
 
@@ -83,7 +87,7 @@ describe Game do
 
   describe "#run" do
     it "is game over after the function runs" do
-      Input.stub(:get_console_input) { g.board.get_available_squares.first }
+      g.stub(:get_move) { g.board.available_squares.first }
       Display.stub(:display)
       g.run
       g.board.game_over?.should eq(true)

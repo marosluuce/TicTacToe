@@ -1,5 +1,5 @@
 class Input
-  def self.get_console_input
+  def self.request_move
     gets.chomp
   end
 end

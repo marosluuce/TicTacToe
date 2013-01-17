@@ -44,14 +44,14 @@ describe Board do
     end
   end
 
-  describe "#get_available_squares" do
+  describe "#available_squares" do
     it "returns [] when squares are full" do
       fill_board_with_symbol(b, :x)
-      b.get_available_squares.should eq([])
+      b.available_squares.should eq([])
     end
     it "returns [1,2,4,5,6,7,8,9] when 3 is taken" do
       b.set_square(3, :x)
-      b.get_available_squares.should eq([1,2,4,5,6,7,8,9])
+      b.available_squares.should eq([1,2,4,5,6,7,8,9])
     end
   end
 
