@@ -20,6 +20,10 @@ class Board
     end
   end
 
+  def set_square_nil(i)
+    @squares[i - 1] = nil
+  end
+
   def available_squares
     avail = []
     @squares.each_with_index do |x, i|
@@ -41,6 +45,14 @@ class Board
 
   def full?
     not @squares.include? nil
+  end
+
+  def empty?
+    @squares.uniq.count == 1 && @squares.first.nil?
+  end
+
+  def draw?
+    full? && winner.nil?
   end
 
   def game_over?

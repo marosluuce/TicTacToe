@@ -12,7 +12,7 @@ class Game
   def initialize
     @board = Board.tic_tac_toe
     #@players = SYMBOLS.map { |s| Player.new(s) }
-    @players = [Player.new(:x, self), AI.new(:o, @board)]
+    @players = [Player.new(:x, self), AI.new(:o, :x, @board)]
   end
 
   def do_move(i, sym)

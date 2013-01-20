@@ -1,5 +1,5 @@
 class Input
   def self.request_move
-    gets.chomp
+    gets
   end
 end

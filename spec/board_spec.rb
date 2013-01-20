@@ -37,6 +37,13 @@ describe Board do
     end
   end
 
+  describe "#set_square_nil" do
+    it "sets a square to nil" do
+      b.set_square(1, :x)
+      b.set_square_nil(5)
+      b.squares[4].should == nil
+    end
+  end
   describe "self.tic_tac_toe" do
     it "returns a 3x3 board" do
       t = Board.tic_tac_toe
@@ -119,6 +126,16 @@ describe Board do
     end
   end
 
+  describe "#empty?" do
+    it "is true when empty" do
+      b.empty?.should be_true
+    end
+    it "is false when not empty" do
+      b.set_square(1, :x)
+      b.empty?.should be_false
+    end
+  end
+
   describe "#winner" do
     it "returns nil if no winner is found" do
       b.winner.should == nil
@@ -174,6 +191,20 @@ describe Board do
         b.set_square(n * width - (n - 1), sym)
       end
       b.winner.should be_nil
+    end
+  end
+
+  describe "#draw?" do
+    it "returns false if board is not full" do
+      b.draw?.should == b.full?
+    end
+    it "returns false if there is a winner" do
+      (1..width).each { |n| b.set_square(n, :x) }
+      b.draw?.should == false
+    end
+    it "returns true if there is no winner and the board is full" do
+      set_board_to_draw_state(b)
+      b.draw?.should == true
     end
   end
 

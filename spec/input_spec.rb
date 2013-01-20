@@ -6,9 +6,5 @@ describe Input do
       Input.stub(:gets) { "123" }
       Input.request_move.should == "123"
     end
-    it "should remove \\n from the input" do
-      Input.stub(:gets) { "123\n" }
-      Input.request_move.should == "123"
-    end
   end
 end
