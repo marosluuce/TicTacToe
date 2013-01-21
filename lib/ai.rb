@@ -8,13 +8,17 @@ class AI
   end
 
   def get_move
-    if board.empty?
+    available = @board.available_squares
+    if @board.empty? || (available.count == 8 && available.include?(5))
       5
+    elsif available.count == 8 && !available.include?(5)
+      [1, 3, 7, 9].sample
     else
       select_move(run_negamax(@board))
     end
   end
 
+  private
   def score_board(board)
     winner = board.winner
     if winner == @sym
