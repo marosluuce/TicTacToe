@@ -8,7 +8,11 @@ class AI
   end
 
   def get_move
-    select_move(run_negamax(@board))
+    if board.empty?
+      5
+    else
+      select_move(run_negamax(@board))
+    end
   end
 
   def score_board(board)

@@ -1,5 +1,5 @@
 class Board
-  attr_reader :squares, :length, :width
+  attr_reader :squares, :length, :width, :last_move
 
   def self.tic_tac_toe
     self.new(3, 3)
@@ -14,6 +14,7 @@ class Board
   def set_square(i, val)
     i -= 1
     if i < @squares.count && @squares[i].nil?
+      @last_move = i + 1
       @squares[i] = val
     else
       false
@@ -22,6 +23,7 @@ class Board
 
   def set_square_nil(i)
     @squares[i - 1] = nil
+    @last_move = nil
   end
 
   def available_squares

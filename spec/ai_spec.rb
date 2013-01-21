@@ -16,6 +16,9 @@ describe AI do
     it "picks a valid move" do
       b.available_squares.should include(ai.get_move)
     end
+    it "picks the middle if board is empty" do
+      ai.get_move.should == 5
+    end
   end
 
   describe "#score_board" do
@@ -66,11 +69,10 @@ describe AI do
       moves = ai.run_negamax(b)
       moves[9].should > moves[8]
     end
-    it "takes a fork [x,x,o,_,o,_,_,x,_]" do
+    it "takes a win [x,x,o,_,o,_,_,x,_]" do
       set_board_to_array(b, [:x, :x, :o, nil, :o, nil, nil, :x, nil])
       moves = ai.run_negamax(b)
-      p moves
-      moves[6].should == 1
+      moves[6].should == "FIX ME"
     end
     it "is blocks a fork [x,_,_,_,o,_,_,_,x]" do
       set_board_to_array(b, [:x, nil, nil, nil, :o, nil, nil, nil, :x])

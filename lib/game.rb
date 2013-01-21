@@ -4,15 +4,15 @@ require_relative "input"
 require_relative "display"
 require_relative "ai"
 
-#SYMBOLS = [:x, :o]
-
 class Game
   attr_reader :board, :players
 
   def initialize
     @board = Board.tic_tac_toe
-    #@players = SYMBOLS.map { |s| Player.new(s) }
     @players = [Player.new(:x, self), AI.new(:o, :x, @board)]
+
+    Display.display("Welcome to Tic-Tic-Toe!\n")
+    draw
   end
 
   def do_move(i, sym)
@@ -55,6 +55,12 @@ class Game
   end
 
   def draw
-    Display.display(@board)
+    Display.print_last_move(@board.last_move)
+    if @board.game_over?
+      Display.print_winner(@board.winner)
+    else
+      Display.print_turn(@players.first.sym)
+    end
+    Display.display("#{@board}")
   end
 end

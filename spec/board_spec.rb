@@ -35,13 +35,23 @@ describe Board do
     it "returns false for an invalid index" do
       b.set_square(length * width + 1, :x).should eq(false)
     end
+    it "remembers the last square played" do
+      b.set_square(0, :x)
+      b.last_move.should == 0
+    end
   end
 
   describe "#set_square_nil" do
     it "sets a square to nil" do
-      b.set_square(1, :x)
+      b.set_square(5, :x)
       b.set_square_nil(5)
       b.squares[4].should == nil
+    end
+    it "sets last_move to nil" do
+      b.set_square(1, :x)
+      b.set_square_nil(1)
+      b.last_move.should_not == 1
+      b.last_move.should be_nil
     end
   end
   describe "self.tic_tac_toe" do
