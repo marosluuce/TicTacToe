@@ -19,14 +19,14 @@ class AI
   end
 
   private
-  def score_board(board)
+  def score_board(board, symbol)
     winner = board.winner
-    if winner == @sym
-      1
-    elsif winner == @opponent_sym
-      -1
-    elsif board.full?
+    if winner.nil? && board.full?
       0
+    elsif winner == symbol
+      1
+    else
+      -1
     end
   end
 
@@ -39,22 +39,22 @@ class AI
     moves = {}
     board.available_squares.each do |square|
       board.set_square(square, @sym)
-      moves[square] = -negamax(board, -1)
+      moves[square] = -negamax(board)
       board.set_square_nil(square)
     end
     moves
   end
 
-  def negamax(board, color)
-    return color * score_board(board) if board.game_over?
+  def negamax(board, depth=1)
+    symbol = depth.odd? ? @opponent_sym : @sym
+    return score_board(board, symbol) if board.game_over?
 
     value = -9999
-    symbol = color == 1 ?  @sym : @opponent_sym
     board.available_squares.each do |square|
       board.set_square(square, symbol)
-      value = [value, -negamax(board, -1 * color)].max
+      value = [value, -negamax(board, depth+=1)].max
       board.set_square_nil(square)
     end
-    value
+    value /= Float(depth)
   end
 end

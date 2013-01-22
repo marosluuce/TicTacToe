@@ -24,8 +24,8 @@ describe AI do
       set_board_to_array(b, [:x, nil, :x, nil, :o, :x, nil, :o, :o])
       [2, 7].should include(ai.get_move)
     end
-    it "is a win and not a block for [x,_,x,_x,_,_,o,_,o]" do
-      set_board_to_array(b, [:x, nil, :x, :x, nil, nil, :o, nil, :o])
+    it "is a win and not a block for [x,_,x,_,x,_,o,_,o]" do
+      set_board_to_array(b, [:x, nil, :x,  nil, :x, nil, :o, nil, :o])
       ai.get_move.should == 8
     end
     it "is a block for [x,o,x,o,x,x,o,_,_]" do
@@ -35,7 +35,7 @@ describe AI do
     #Testing another win because this setup gave a weird response before
     it "takes a win [x,x,o,_,o,_,_,x,_]" do
       set_board_to_array(b, [:x, :x, :o, nil, :o, nil, nil, :x, nil])
-      ai.get_move.should == 6
+      ai.get_move.should == 7
     end
     it "is blocks a fork [x,_,_,_,o,_,_,_,x]" do
       set_board_to_array(b, [:x, nil, nil, nil, :o, nil, nil, nil, :x])
