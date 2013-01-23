@@ -1,23 +1,24 @@
 require "player"
 
 describe Player do
-  let(:sym) { :x }
-  let(:p) { Player.new(sym, nil) }
+  let(:symbol) { :x }
+  let(:fake_input) { Object.new }
+  let(:player) { Player.new(symbol, fake_input) }
 
   it "creates a player" do
-    p.should be_an_instance_of Player
+    player.should be_an_instance_of Player
   end
   it "has a symbol" do
-    p.should respond_to :sym
+    player.should respond_to :sym
   end
   it "returns the correct symbol" do
-    p.sym.should == sym
+    player.sym.should == symbol
   end
 
   describe "#get_move" do
     it "should get a move from input" do
-      p.input.should_receive(:request_move) { 1 }
-      p.get_move
+      fake_input.stub(:request_move) { "1" }
+      player.get_move.should be_a String
     end
   end
 end

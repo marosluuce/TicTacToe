@@ -32,7 +32,6 @@ describe AI do
       set_board_to_array(b, [:x, :o, :x, :o, :x, :x, :o, nil, nil])
       ai.get_move.should == 9
     end
-    #Testing another win because this setup gave a weird response before
     it "takes a win [x,x,o,_,o,_,_,x,_]" do
       set_board_to_array(b, [:x, :x, :o, nil, :o, nil, nil, :x, nil])
       ai.get_move.should == 7

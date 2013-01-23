@@ -52,7 +52,7 @@ class AI
     value = -9999
     board.available_squares.each do |square|
       board.set_square(square, symbol)
-      value = [value, -negamax(board, depth+=1)].max
+      value = [value, -negamax(board, depth+1)].max
       board.set_square_nil(square)
     end
     value /= Float(depth)
