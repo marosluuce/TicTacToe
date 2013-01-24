@@ -1,15 +1,16 @@
 require "game"
-require "player"
 require "input"
 require "input_strategy"
 require "display"
 
 describe Game do
   let(:board) { Board.tic_tac_toe }
-  let(:game) { Game.new([Player.new(:x, board), Player.new(:o, board)], board) }
+  let(:player) { "fake_player" }
+  let(:game) { Game.new([player, player], board) }
 
   before(:each) do
     Display.stub(:display)
+    player.stub(:get_move) { board.available_squares.first }
   end
 
   it "has a tictactoe board" do
@@ -21,10 +22,6 @@ describe Game do
   end
 
   describe "#move" do
-    before(:each) do
-      game.stub(:get_move) { "1" }
-    end
-
     it "gets the move" do
       game.should_receive(:get_move) { "1" }
       game.move
@@ -67,13 +64,6 @@ describe Game do
     end
     it "returns true when move is in the available squares" do
       game.validate_move("1").should eq(true)
-    end
-  end
-
-  describe "#request_move" do
-    it "calls Input.request_move" do
-      Input.should_receive(:request_move)
-      game.request_move
     end
   end
 

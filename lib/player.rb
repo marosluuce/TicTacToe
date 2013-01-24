@@ -3,14 +3,13 @@ require "dumb_strategy"
 class Player
   attr_reader :strategy
 
-  def initialize(symbol, board, strategy=DumbStrategy)
+  def initialize(symbol, strategy=nil)
     @symbol = symbol
-    @board = board
     @strategy = strategy
   end
 
   def get_move
-    @strategy.get_move(@board, self)
+    @strategy.get_move(self)
   end
 
   def to_s

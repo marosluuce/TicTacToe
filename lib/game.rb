@@ -1,8 +1,7 @@
-require_relative "board"
-require_relative "player"
-require_relative "input"
-require_relative "display"
-require_relative "ai"
+require "board"
+require "player"
+require "input"
+require "display"
 
 class Game
   attr_reader :board, :players
@@ -31,14 +30,8 @@ class Game
     @board.available_squares.include? move.to_i
   end
 
-  def request_move
-    Input.request_move
-  end
-
   def run
-    Display.display("Welcome to Tic-Tic-Toe!\n")
     draw
-
     until @board.game_over?
       turn
     end

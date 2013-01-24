@@ -3,7 +3,7 @@ class InputStrategy
     @source = source
   end
 
-  def get_move(board, calling_player)
+  def get_move(calling_player)
     @source.request_move
   end
 end

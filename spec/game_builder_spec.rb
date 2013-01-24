@@ -1,9 +1,12 @@
 require "game_builder"
 require "game"
+require "input"
+require "display"
 
 describe GameBuilder do
-  it "builds a new game" do
-    GameBuilder.build.should be_an_instance_of Game
-  end
+  let(:builder) { GameBuilder.new() }#Input, Display) }
 
+  it "builds a new game" do
+    builder.build.should be_an_instance_of Game
+  end
 end
