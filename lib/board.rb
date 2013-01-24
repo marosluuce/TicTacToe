@@ -12,12 +12,9 @@ class Board
   end
 
   def set_square(i, val)
-    i -= 1
-    if i < @squares.count && @squares[i].nil?
-      @last_move = i + 1
-      @squares[i] = val
-    else
-      false
+    if i > 0 && i < @squares.count + 1
+      @last_move = i
+      @squares[i-1] = val
     end
   end
 
@@ -37,7 +34,7 @@ class Board
   def to_s
     string = ""
     @squares.each_with_index.map do |s, i|
-      s.nil? ? i + 1 : s
+      s.nil? ? i + 1 : s.to_s
     end.each_slice(@width).with_index do |line, i|
       string << line.join("|")
       string << "\n#{"-" * (@width * 2 - 1)}\n" unless i == @length - 1

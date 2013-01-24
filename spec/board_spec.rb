@@ -24,17 +24,9 @@ describe Board do
       board.set_square(1, :x)
       board.squares[0].should == :x
     end
-    it "only sets the value if the square is empty" do
-      board.set_square(1, :x)
-      board.set_square(1, :o).should eq(false) 
-      board.squares[0].should == :x
-    end
-    it "returns false for an invalid index" do
-      board.set_square(length * width + 1, :x).should eq(false)
-    end
     it "remembers the last square played" do
-      board.set_square(0, :x)
-      board.last_move.should == 0
+      board.set_square(1, :x)
+      board.last_move.should == 1
     end
   end
 
@@ -79,7 +71,7 @@ describe Board do
         @one_board.to_s.should == "1"
       end
       it "returns the value when the square has a value" do
-        @one_board.set_square(0, :x)
+        @one_board.set_square(1, :x)
         @one_board.to_s.should == "x"
       end
     end
@@ -148,61 +140,43 @@ describe Board do
       board.winner.should == nil
     end
     it "returns the symbol when the first row contains the same symbol" do
-      (1..width).each { |square| board.set_square(square, :x) }
+      set_board_to_array(board, [:x, :x, :x, nil, nil, nil, nil, nil, nil])
       board.winner.should == :x
     end
     it "returns the symbol when the last row contains the same symbol" do
-      (1..width).each { |square| board.set_square(square + width * 2, :x)}
+      set_board_to_array(board, [nil, nil, nil, nil, nil, nil, :x, :x, :x])
       board.winner.should == :x
     end
     it "returns the symbol when the first column contains the same symbol" do
-      (0...width).each { |square| board.set_square(square * width, :x)}
+      set_board_to_array(board, [:x, nil, nil, :x, nil, nil, :x, nil, nil])
       board.winner.should == :x
     end
     it "returns the symbol when the last column contains the same symbol" do
-      (0...width).each do |square|
-        board.set_square(square * width + width - 1, :x)
-      end
+      set_board_to_array(board, [nil, nil, :x, nil, nil, :x, nil, nil, :x])
       board.winner.should == :x
     end
     it "returns the symbol when the left diag contains the same symbol" do
-      (0...width).each do |square|
-        board.set_square(square * width + square + 1, :x)
-      end
+      set_board_to_array(board, [:x, nil, nil, nil, :x, nil, nil, nil, :x])
       board.winner.should == :x
     end
     it "returns the symbol when the right diag contains the same symbol" do
-      (1..width).each do |square|
-        board.set_square(square * width - (square - 1), :x)
-      end
+      set_board_to_array(board, [nil, nil, :x, nil, :x, nil, :x, nil, nil])
       board.winner.should == :x
     end
     it "returns nil when row does not contain the same symbols" do
-      (1..width).each do |square|
-        sym = square.even? ? :x : :o
-        board.set_square(square, sym)
-      end
+      set_board_to_array(board, [:x, :o, :x, nil, nil, nil, nil, nil, nil])
       board.winner.should be_nil
     end
     it "returns nil when a col does not contain the same symbols" do
-      (0...width).each do |square|
-        sym = square.even? ? :x : :o
-        board.set_square(square * width, sym)
-      end
+      set_board_to_array(board, [:x, nil, nil, :o, nil, nil, :x, nil, nil])
       board.winner.should be_nil
     end
     it "returns nil when the left diag does not contain the same symbol" do
-      (0...width).each do |square|
-        sym = square.even? ? :x : :o
-        board.set_square(square * width + square + 1, sym)
-      end
+      set_board_to_array(board, [:x, nil, nil, nil, :o, nil, nil, nil, :x])
       board.winner.should be_nil
     end
     it "returns nil when the right diag does not contain the same symbol" do
-      (1..width).each do |square|
-        sym = square.even? ? :x : :o
-        board.set_square(square * width - (square - 1), sym)
-      end
+      set_board_to_array(board, [nil, nil, :x, nil, :o, nil, :x, nil, nil])
       board.winner.should be_nil
     end
   end

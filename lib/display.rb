@@ -3,17 +3,17 @@ class Display
     puts "\n" + msg.to_s
   end
 
-  def self.print_turn(sym)
-    turn_info = "#{sym.upcase}'s turn!"
+  def self.print_turn(player)
+    turn_info = "#{player.to_s}'s turn!"
     display(turn_info)
   end
 
-  def self.print_winner(sym)
+  def self.print_winner(winner)
     output = ""
-    if sym.nil?
+    if winner.nil?
       output = "Draw!"
     else
-      output = "#{sym.upcase} Won!"
+      output = "#{winner.to_s} Won!"
     end
     display(output)
   end

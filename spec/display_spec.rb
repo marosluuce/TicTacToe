@@ -12,7 +12,7 @@ describe Display do
   describe "#print_turn" do
     it "prints whose turn it is" do
       sym = :x
-      Display.should_receive(:display).with("X's turn!")
+      Display.should_receive(:display).with("x's turn!")
       Display.print_turn(sym)
     end
   end
@@ -23,7 +23,7 @@ describe Display do
       Display.print_winner(nil)
     end
     it "outputs the winner" do
-      Display.should_receive(:display).with("X Won!")
+      Display.should_receive(:display).with("x Won!")
       Display.print_winner(:x)
     end
   end

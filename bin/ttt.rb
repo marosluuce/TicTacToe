@@ -1,5 +1,5 @@
-$: << File.expand_path(File.dirname(__FILE__) + "../lib/")
-require_relative '../lib/game'
+$: << "../lib/"
+require 'game_builder'
 
-g = Game.new
-g.run
+game = GameBuilder.build
+game.run

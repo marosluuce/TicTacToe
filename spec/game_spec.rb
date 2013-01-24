@@ -1,10 +1,12 @@
 require "game"
 require "player"
 require "input"
+require "input_strategy"
 require "display"
 
 describe Game do
-  let(:game) { Game.new }
+  let(:board) { Board.tic_tac_toe }
+  let(:game) { Game.new([Player.new(:x, board), Player.new(:o, board)], board) }
 
   before(:each) do
     Display.stub(:display)
@@ -32,9 +34,8 @@ describe Game do
       game.move
     end
     it "does the move" do
-      game.should_receive(:do_move).with("1", :x)
-      game.stub(:validate_move) { true }
       game.move
+      game.board.squares[0].should_not be_nil
     end
     it "loops until it gets valid input" do
       Input.stub(:request_move) { "a" "1" }
@@ -46,9 +47,6 @@ describe Game do
     it "makes a move" do
       game.do_move(1, :x)
       game.board.squares[0].should == :x
-    end
-    it "returns false for an invalid move" do
-      game.do_move(9000, :x).should eq(false)
     end
   end
 

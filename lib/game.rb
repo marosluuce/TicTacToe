@@ -7,12 +7,9 @@ require_relative "ai"
 class Game
   attr_reader :board, :players
 
-  def initialize
-    @board = Board.tic_tac_toe
-    @players = [Player.new(:x, self), AI.new(:o, :x, @board)]
-
-    Display.display("Welcome to Tic-Tic-Toe!\n")
-    draw
+  def initialize(players, board)
+    @board = board
+    @players = players
   end
 
   def do_move(i, sym)
@@ -23,7 +20,7 @@ class Game
     begin
       move = get_move
     end while not validate_move(move)
-    do_move(move, @players.first.sym)
+    do_move(move, @players.first)
   end
 
   def get_move
@@ -39,6 +36,9 @@ class Game
   end
 
   def run
+    Display.display("Welcome to Tic-Tic-Toe!\n")
+    draw
+
     until @board.game_over?
       turn
     end
@@ -59,7 +59,7 @@ class Game
     if @board.game_over?
       Display.print_winner(@board.winner)
     else
-      Display.print_turn(@players.first.sym)
+      Display.print_turn(@players.first)
     end
     Display.display("#{@board}")
   end
