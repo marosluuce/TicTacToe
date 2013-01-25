@@ -1,5 +1,6 @@
 $: << File.expand_path(File.dirname(__FILE__) + "/../lib/")
-require "game_builder"
+require "main_menu"
 
-game = GameBuilder.build
+menu = MainMenu.new(Kernel)
+game = menu.run
 game.run
