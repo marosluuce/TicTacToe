@@ -1,5 +1,3 @@
-require "dumb_strategy"
-
 class Player
   attr_reader :strategy
 

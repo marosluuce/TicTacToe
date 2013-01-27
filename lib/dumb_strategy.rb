@@ -1,5 +1,9 @@
 class DumbStrategy
-  def initialize(board)
+  def self.to_s
+    "Dumb AI"
+  end
+
+  def initialize(players, board, io)
     @board = board
   end
 

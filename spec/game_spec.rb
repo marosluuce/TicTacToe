@@ -1,6 +1,6 @@
+require "Board"
 require "game"
 require "input"
-require "input_strategy"
 require "display"
 
 describe Game do

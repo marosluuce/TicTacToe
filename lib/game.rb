@@ -1,5 +1,3 @@
-require "board"
-require "player"
 require "input"
 require "display"
 

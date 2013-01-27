@@ -4,7 +4,7 @@ require "spec_helper"
 
 describe Negamax do
   let(:board) { Board.tic_tac_toe }
-  let(:negamax) { Negamax.new([:x, :o], board) }
+  let(:negamax) { Negamax.new([:x, :o], board, nil) }
 
   describe "#get_move" do
     it "picks a valid move" do

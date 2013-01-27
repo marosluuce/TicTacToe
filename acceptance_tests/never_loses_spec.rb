@@ -2,13 +2,13 @@ require "player"
 require "board"
 require "negamax"
 
-describe "Never Loses" do
-  it "never loses" do
+describe "AI Never Loses" do
+  it "never loses with negamax strategy" do
     board = Board.tic_tac_toe
-    player = Player.new(:o, board, nil)
-    negamax = Negamax.new(:x, player)
-    player.change_strategy(negamax)
-    never_loses(player, board).should be_true
+    ai = Player.new(:o)
+    negamax = Negamax.new([:x, ai], board, nil)
+    ai.change_strategy(negamax)
+    never_loses(ai, board).should be_true
   end
 end
 

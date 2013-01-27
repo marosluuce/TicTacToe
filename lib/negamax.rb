@@ -1,5 +1,9 @@
 class Negamax
-  def initialize(players, board)
+  def self.to_s
+    "Smart AI"
+  end
+
+  def initialize(players, board, io)
     @players = players
     @board = board
   end
@@ -11,14 +15,15 @@ class Negamax
     elsif available.count == 8
       [1, 3, 7, 9].sample
     else
-      select_move(run_negamax(calling_player))
+      @players.rotate! if calling_player != @players.first
+      run_negamax
     end
   end
 
   private
   def score_board(symbol)
     winner = @board.winner
-    if winner.nil? && @board.full?
+    if winner.nil?
       0
     elsif winner == symbol
       1
@@ -27,21 +32,20 @@ class Negamax
     end
   end
 
-  def select_move(moves)
-    max_value = moves.max_by { |_, v| v }.last
-    moves.select { |_, v| v == max_value }.keys.to_a.first
-  end
-
-  def run_negamax(calling_player)
-    @players.rotate! if calling_player != @players.first
-
-    moves = {}
+  def run_negamax
+    best_move = nil
+    value = -999
     @board.available_squares.each do |square|
       @board.set_square(square, @players.first)
-      moves[square] = -negamax()
+      score = -negamax()
       @board.set_square_nil(square)
+
+      if score > value
+        value = score
+        best_move = square
+      end
     end
-    moves
+    best_move
   end
 
   def negamax(depth=1)

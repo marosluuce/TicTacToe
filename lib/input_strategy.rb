@@ -1,9 +1,13 @@
 class InputStrategy
-  def initialize(source)
-    @source = source
+  def self.to_s
+    "Human"
+  end
+
+  def initialize(players, board, io)
+    @io = io
   end
 
   def get_move(calling_player)
-    @source.request_move
+    @io.request_move
   end
 end
