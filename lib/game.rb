@@ -1,12 +1,10 @@
-require "input"
-require "display"
-
 class Game
   attr_reader :board, :players
 
-  def initialize(players, board)
+  def initialize(players, board, io)
     @board = board
     @players = players
+    @io = io
   end
 
   def do_move(i, sym)
@@ -46,12 +44,12 @@ class Game
   end
 
   def draw
-    Display.print_last_move(@board.last_move)
+    @io.print_last_move(@board.last_move)
     if @board.game_over?
-      Display.print_winner(@board.winner)
+      @io.print_winner(@board.winner)
     else
-      Display.print_turn(@players.first)
+      @io.print_turn(@players.first)
     end
-    Display.display("#{@board}")
+    @io.puts "#{@board}"
   end
 end

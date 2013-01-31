@@ -1,15 +1,14 @@
 require "main_menu"
 require "player"
 require "input_strategy"
-require "game"
+require "uiwrapper"
 require "stringio"
 
 describe MainMenu do
   let(:fake_input) { StringIO.new("1\n") }
   let(:strategies) { {1 => InputStrategy} }
-  let(:menu) { MainMenu.new(fake_input, strategies) }
+  let(:menu) { MainMenu.new(UIWrapper.new(fake_input), strategies) }
 
-  # TODO: Implement a wrapper object responsible for IO that can be faked with StringIO.
   it "gets the user's input" do
     menu.request_choice.should be_an_instance_of Fixnum
     #fake_input.string.should include(MainMenu::USER_PROMPT)

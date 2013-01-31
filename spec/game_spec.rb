@@ -1,15 +1,15 @@
-require "Board"
+require "board"
 require "game"
-require "input"
-require "display"
+require "uiwrapper"
+require "stringio"
 
 describe Game do
   let(:board) { Board.tic_tac_toe }
   let(:player) { "fake_player" }
-  let(:game) { Game.new([player, player], board) }
+  let(:io) { UIWrapper.new(StringIO.new) }
+  let(:game) { Game.new([player, player], board, io) }
 
   before(:each) do
-    Display.stub(:display)
     player.stub(:get_move) { board.available_squares.first }
   end
 
@@ -35,7 +35,7 @@ describe Game do
       game.board.squares[0].should_not be_nil
     end
     it "loops until it gets valid input" do
-      Input.stub(:request_move) { "a" "1" }
+      IO.stub(:request_move) { "a" "1" }
       game.move
     end
   end
@@ -78,8 +78,7 @@ describe Game do
 
   describe "#run" do
     it "is game over after the function runs" do
-      Input.stub(:request_move) { game.board.available_squares.first }
-      Display.stub(:display)
+      IO.stub(:request_move) { game.board.available_squares.first }
       game.run
       game.board.game_over?.should eq(true)
     end
@@ -95,7 +94,7 @@ describe Game do
 
   describe "#draw" do
     it "draws something" do
-      Display.should_receive(:display).at_least(:once)
+      io.should_receive(:puts).at_least(:once)
       game.draw
     end
   end
