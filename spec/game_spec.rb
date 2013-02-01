@@ -34,10 +34,6 @@ describe Game do
       game.move
       game.board.squares[0].should_not be_nil
     end
-    it "loops until it gets valid input" do
-      IO.stub(:request_move) { "a" "1" }
-      game.move
-    end
   end
 
   describe "#do_move" do
