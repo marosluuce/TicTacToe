@@ -1,3 +1,4 @@
+require "spec_helper"
 require "board"
 require "game"
 require "uiwrapper"
@@ -5,16 +6,18 @@ require "stringio"
 
 describe Game do
   let(:board) { Board.tic_tac_toe }
-  let(:player) { "fake_player" }
+  let(:player1) { "fake_player1" }
+  let(:player2) { "fake_player2"}
   let(:io) { UIWrapper.new(StringIO.new) }
-  let(:game) { Game.new([player, player], board, io) }
+  let(:game) { Game.new([player1, player2], board, io) }
 
   before(:each) do
-    player.stub(:get_move) { board.available_squares.first }
+    player1.stub(:get_move) { board.available_squares.first }
+    player2.stub(:get_move) { board.available_squares.first }
   end
 
   it "has a tictactoe board" do
-    game.board.length.should == 3
+    game.board.squares.count.should == 9
     game.board.width.should == 3
   end
   it "creates at least one player" do
@@ -64,27 +67,28 @@ describe Game do
   end
 
   describe "#turn" do
-    it "calls the move, update, and draw in order" do
-      game.should_receive(:move).ordered
-      game.should_receive(:update).ordered
-      game.should_receive(:draw).ordered
-      game.turn
-    end
   end
 
   describe "#run" do
     it "is game over after the function runs" do
-      IO.stub(:request_move) { game.board.available_squares.first }
       game.run
-      game.board.game_over?.should eq(true)
+      game.game_over?.should eq(true)
     end
   end
 
-  describe "#update" do
-    it "rotates the players after every move" do
-      player_one = game.players.first
-      game.update
-      game.players.last.should == player_one
+  describe "#current_player" do
+    it "is the first player on the first turn" do
+      game.current_player.should == game.players.first
+    end
+
+    it "is the second player on the second turn" do
+      game.do_move(1, game.players.first)
+      game.current_player.should == game.players.last
+    end
+
+    it "is the first player on the third turn" do
+      set_board_to_array(board, [:x, :o, nil, nil, nil, nil, nil, nil, nil])
+      game.current_player.should == game.players.first
     end
   end
 
@@ -94,4 +98,79 @@ describe Game do
       game.draw
     end
   end
+
+  describe "#draw?" do
+    it "is false if board is not full" do
+      game.draw?.should == board.full?
+    end
+    it "is false if there is a winner" do
+      set_board_to_array(board, [:x, :x, :x, nil, nil, nil, nil, nil, nil])
+      game.draw?.should eq(false)
+    end
+    it "is true if there is no winner and the board is full" do
+      set_board_to_draw_state(board)
+      game.draw?.should eq(true)
+    end
+  end
+
+  describe "#game_over?" do
+    it "returns false when board is empty" do
+      game.game_over?.should eq(false)
+    end
+    it "returns true when board is full" do
+      set_board_to_draw_state(board)
+      game.game_over?.should eq(true)
+    end
+    it "returns true when winner is not nil" do
+      fill_board_with_symbol(board, :x)
+      game.game_over?.should eq(true)
+    end
+  end
+
+  describe "#winner" do
+    it "returns nil if no winner is found" do
+      game.winner.should == nil
+    end
+    it "returns the symbol when the first row contains the same symbol" do
+      set_board_to_array(board, [:x, :x, :x, nil, nil, nil, nil, nil, nil])
+      game.winner.should == :x
+    end
+    it "returns the symbol when the last row contains the same symbol" do
+      set_board_to_array(board, [nil, nil, nil, nil, nil, nil, :x, :x, :x])
+      game.winner.should == :x
+    end
+    it "returns the symbol when the first column contains the same symbol" do
+      set_board_to_array(board, [:x, nil, nil, :x, nil, nil, :x, nil, nil])
+      game.winner.should == :x
+    end
+    it "returns the symbol when the last column contains the same symbol" do
+      set_board_to_array(board, [nil, nil, :x, nil, nil, :x, nil, nil, :x])
+      game.winner.should == :x
+    end
+    it "returns the symbol when the left diag contains the same symbol" do
+      set_board_to_array(board, [:x, nil, nil, nil, :x, nil, nil, nil, :x])
+      game.winner.should == :x
+    end
+    it "returns the symbol when the right diag contains the same symbol" do
+      set_board_to_array(board, [nil, nil, :x, nil, :x, nil, :x, nil, nil])
+      game.winner.should == :x
+    end
+    it "returns nil when row does not contain the same symbols" do
+      set_board_to_array(board, [:x, :o, :x, nil, nil, nil, nil, nil, nil])
+      game.winner.should be_nil
+    end
+    it "returns nil when a col does not contain the same symbols" do
+      set_board_to_array(board, [:x, nil, nil, :o, nil, nil, :x, nil, nil])
+      game.winner.should be_nil
+    end
+    it "returns nil when the left diag does not contain the same symbol" do
+      set_board_to_array(board, [:x, nil, nil, nil, :o, nil, nil, nil, :x])
+      game.winner.should be_nil
+    end
+    it "returns nil when the right diag does not contain the same symbol" do
+      set_board_to_array(board, [nil, nil, :x, nil, :o, nil, :x, nil, nil])
+      game.winner.should be_nil
+    end
+  end
+
 end

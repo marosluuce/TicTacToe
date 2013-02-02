@@ -3,42 +3,39 @@ class Negamax
     "Smart AI"
   end
 
-  def initialize(players, board, io)
-    @players = players
-    @board = board
+  def initialize(game, io)
+    @game = game
   end
 
-  def get_move(calling_player)
-    available = @board.available_squares
-    if available.include?(5)
+  def get_move
+    if @game.board.available_squares.include?(5)
       5
-    elsif available.count == 8
+    elsif @game.board.available_squares.count == 8
       [1, 3, 7, 9].sample
     else
-      @players.rotate! if calling_player != @players.first
       run_negamax
     end
   end
 
   private
-  def score_board(symbol)
-    winner = @board.winner
-    if winner.nil?
+  def score_game(symbol)
+    if @game.winner.nil?
       0
-    elsif winner == symbol
+    elsif @game.winner == symbol
       1
     else
       -1
     end
   end
 
+  # I still don't like this duplication...
   def run_negamax
     best_move = nil
     value = -999
-    @board.available_squares.each do |square|
-      @board.set_square(square, @players.first)
+    @game.board.available_squares.each do |square|
+      @game.board.set_square(square, @game.current_player)
       score = -negamax()
-      @board.set_square_nil(square)
+      @game.board.set_square_nil(square)
 
       if score > value
         value = score
@@ -49,14 +46,13 @@ class Negamax
   end
 
   def negamax(depth=1)
-    symbol = depth.even? ? @players.first : @players.last
-    return score_board(symbol) if @board.game_over?
+    return score_game(@game.current_player) if @game.game_over?
 
     value = -9999
-    @board.available_squares.each do |square|
-      @board.set_square(square, symbol)
+    @game.board.available_squares.each do |square|
+      @game.board.set_square(square, @game.current_player)
       value = [value, -negamax(depth+1)].max
-      @board.set_square_nil(square)
+      @game.board.set_square_nil(square)
     end
     value /= Float(depth)
   end

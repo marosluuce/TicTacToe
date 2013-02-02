@@ -20,6 +20,7 @@ class MainWindow < Qt::MainWindow
 end
 
 class BoardWidget < Qt::Widget
+  signals "set_move(int)"
   attr_accessor :move
 
   def initialize(io, game)
@@ -28,14 +29,16 @@ class BoardWidget < Qt::Widget
     @game = game
     @grid_layout = Qt::GridLayout.new(self)
     (0...9).each do |n|
-      @grid_layout.add_widget(BoardSquare.new(n + 1), n / 3, n % 3)
+      square = BoardSquare.new(n + 1)
+      @grid_layout.add_widget(square, n / 3, n % 3)
+      connect(square, SIGNAL(:clicked)) { set_move(square.index) }
     end
     @text = Qt::TextEdit.new(self)
     @text.resize(300, 400)
     @timer = Qt::Timer.new(self)
 
     connect(@timer, SIGNAL(:timeout)) { @game.turn }
-    @timer.start(5000)
+    @timer.start(3000)
   end
 
   def set_message(msg)
@@ -43,12 +46,17 @@ class BoardWidget < Qt::Widget
     @move = nil
   end
 
+  def set_move(move)
+    @move = move
+  end
+
   def get_move
-    while @move.nil?
-      puts "move: #{@move}"
-      Qt::CoreApplication::process_events
-    end
-    puts "move: #{@move}"
+#    while @move.nil?
+#      Qt::CoreApplication::process_events
+#    end
+#    loop = Qt::EventLoop
+#    connect(SIGNAL("set_move(int)")) { loop.exit(0) }
+#    loop.send(:exec)
     @move
   end
 
@@ -63,11 +71,6 @@ class BoardSquare < Qt::PushButton
     super()
     @index = index
     @symbol = "X"
-    connect(SIGNAL(:clicked)) { set_move }
-  end
-
-  def set_move
-    self.parent.move = @index
   end
 
   def switch_symbol

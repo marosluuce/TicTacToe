@@ -3,6 +3,7 @@ class DumbStrategy
     "Dumb AI"
   end
 
+  # Need to replace players & board with game
   def initialize(players, board, io)
     @board = board
   end

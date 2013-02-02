@@ -43,6 +43,7 @@ describe Board do
       board.last_move.should be_nil
     end
   end
+
   describe "self.tic_tac_toe" do
     it "returns a 3x3 board" do
       ttt_board = Board.tic_tac_toe
@@ -132,80 +133,6 @@ describe Board do
     it "is false when not empty" do
       board.set_square(1, :x)
       board.empty?.should be_false
-    end
-  end
-
-  describe "#winner" do
-    it "returns nil if no winner is found" do
-      board.winner.should == nil
-    end
-    it "returns the symbol when the first row contains the same symbol" do
-      set_board_to_array(board, [:x, :x, :x, nil, nil, nil, nil, nil, nil])
-      board.winner.should == :x
-    end
-    it "returns the symbol when the last row contains the same symbol" do
-      set_board_to_array(board, [nil, nil, nil, nil, nil, nil, :x, :x, :x])
-      board.winner.should == :x
-    end
-    it "returns the symbol when the first column contains the same symbol" do
-      set_board_to_array(board, [:x, nil, nil, :x, nil, nil, :x, nil, nil])
-      board.winner.should == :x
-    end
-    it "returns the symbol when the last column contains the same symbol" do
-      set_board_to_array(board, [nil, nil, :x, nil, nil, :x, nil, nil, :x])
-      board.winner.should == :x
-    end
-    it "returns the symbol when the left diag contains the same symbol" do
-      set_board_to_array(board, [:x, nil, nil, nil, :x, nil, nil, nil, :x])
-      board.winner.should == :x
-    end
-    it "returns the symbol when the right diag contains the same symbol" do
-      set_board_to_array(board, [nil, nil, :x, nil, :x, nil, :x, nil, nil])
-      board.winner.should == :x
-    end
-    it "returns nil when row does not contain the same symbols" do
-      set_board_to_array(board, [:x, :o, :x, nil, nil, nil, nil, nil, nil])
-      board.winner.should be_nil
-    end
-    it "returns nil when a col does not contain the same symbols" do
-      set_board_to_array(board, [:x, nil, nil, :o, nil, nil, :x, nil, nil])
-      board.winner.should be_nil
-    end
-    it "returns nil when the left diag does not contain the same symbol" do
-      set_board_to_array(board, [:x, nil, nil, nil, :o, nil, nil, nil, :x])
-      board.winner.should be_nil
-    end
-    it "returns nil when the right diag does not contain the same symbol" do
-      set_board_to_array(board, [nil, nil, :x, nil, :o, nil, :x, nil, nil])
-      board.winner.should be_nil
-    end
-  end
-
-  describe "#draw?" do
-    it "returns false if board is not full" do
-      board.draw?.should == board.full?
-    end
-    it "returns false if there is a winner" do
-      (1..width).each { |square| board.set_square(square, :x) }
-      board.draw?.should == false
-    end
-    it "returns true if there is no winner and the board is full" do
-      set_board_to_draw_state(board)
-      board.draw?.should == true
-    end
-  end
-
-  describe "#game_over?" do
-    it "returns false when board is empty" do
-      board.game_over?.should eq(false)
-    end
-    it "returns true when board is full" do
-      set_board_to_draw_state(board)
-      board.game_over?.should eq(true)
-    end
-    it "returns true when winner is not nil" do
-      fill_board_with_symbol(board, :x)
-      board.game_over?.should eq(true)
     end
   end
 end
