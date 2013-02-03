@@ -1,13 +1,13 @@
 require "player"
 require "board"
-require "negamax"
+require "hard_ai_strategy"
 require "game"
 
 describe "AI Never Loses" do
   it "never loses with negamax strategy" do
     game = Game.new
     board = Board.tic_tac_toe
-    ai = Player.new(:o, Negamax.new(game))
+    ai = Player.new(:o, HardAiStrategy.new(game))
     game.load_config({:board => board, :players => [:x, ai]})
     never_loses(ai, game).should be_true
   end

@@ -1,11 +1,11 @@
-require "dumb_strategy"
+require "easy_ai_strategy"
 require "board"
 
-describe DumbStrategy do
+describe EasyAIStrategy do
   it "is the first available move" do
     board = Board.tic_tac_toe
-    dumb = DumbStrategy.new(MockGame.new(board))
-    dumb.get_move.should == board.available_squares.first
+    easy = EasyAIStrategy.new(MockGame.new(board))
+    easy.get_move.should == board.available_squares.first
   end
 end
 

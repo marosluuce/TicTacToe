@@ -9,7 +9,7 @@ class CliGame
   def initialize(input, output)
     @io = CliIO.new(input, output)
 
-    player_choices = [3, 2]
+    player_choices = ["Easy AI", "Easy AI"]
     @runner = GameRunner.new(GameBuilder.build(player_choices))
   end
 
@@ -34,12 +34,12 @@ class CliGame
   end
 
   def draw
-    @io.puts @runner.last_move
+    @io.puts CliFormatter.last_move(@runner.last_move)
     if @runner.game_over?
-      @io.puts @runner.winner.to_s
+      @io.puts CliFormatter.winner(@runner.winner)
     else
-      @io.puts @runner.current_player
+      @io.puts CliFormatter.current_player(@runner.current_player)
     end
-    @io.puts CliFormatter.format_board(@runner.board)
+    @io.puts CliFormatter.board(@runner.board)
   end
 end

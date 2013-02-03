@@ -1,4 +1,4 @@
-class Negamax
+class HardAIStrategy
   def self.to_s
     "Smart AI"
   end

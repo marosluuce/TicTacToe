@@ -1,4 +1,4 @@
-class DumbStrategy
+class EasyAIStrategy
   def initialize(game)
     @game = game
   end

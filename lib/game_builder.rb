@@ -1,11 +1,15 @@
 require "game"
 require "board"
 require "player"
-require "dumb_strategy"
-require "negamax"
+require "easy_ai_strategy"
+require "hard_ai_strategy"
 
 class GameBuilder
-  STRATEGIES = {1 => nil, 2 => DumbStrategy, 3 => Negamax}
+  STRATEGIES = {
+    "Human" => nil,
+    "Easy AI" => EasyAIStrategy,
+    "Hard AI"  => HardAIStrategy
+  }
   SYMBOLS = [:x, :o]
 
   def self.build(strat_nums)
@@ -24,8 +28,8 @@ class GameBuilder
 
   def self.configure_players(config, game, strat_nums)
     config[:players] = []
-    strat_nums.each_with_index do |num, i|
-      strategy = STRATEGIES[num].nil? ? nil : STRATEGIES[num].new(game)
+    strat_nums.each_with_index do |strat, i|
+      strategy = STRATEGIES[strat].nil? ? nil : STRATEGIES[strat].new(game)
       config[:players] << Player.new(SYMBOLS[i], strategy)
     end
     config

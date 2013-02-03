@@ -9,4 +9,10 @@ describe CliGame do
     ttt.run
     ttt.runner.game_over?.should eq(true)
   end
+
+  describe "#get_move" do
+    it "get's the current player's h" do
+
+    end
+  end
 end
