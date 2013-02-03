@@ -1,5 +1,5 @@
 class Board
-  attr_reader :squares, :width, :last_move
+  attr_reader :squares, :length, :width
 
   def self.tic_tac_toe
     self.new(3, 3)
@@ -11,33 +11,16 @@ class Board
     @width = width
   end
 
-  def set_square(i, val)
-    if i > 0 && i < @squares.count + 1
-      @last_move = i
-      @squares[i-1] = val
+  def set_square(square, symbol)
+    if square > 0 && square < @squares.count + 1
+      @squares[square-1] = symbol
     end
-  end
-
-  def set_square_nil(i)
-    @squares[i - 1] = nil
-    @last_move = nil
   end
 
   def available_squares
     @squares.each_with_index.map do |square, index|
       square.nil? ? index + 1 : nil
     end.compact
-  end
-
-  def to_s
-    string = ""
-    @squares.each_with_index.map do |s, i|
-      s.nil? ? i + 1 : s.to_s
-    end.each_slice(@width).with_index do |line, i|
-      string << line.join("|")
-      string << "\n#{"-" * (@width * 2 - 1)}\n" unless i == @length - 1
-    end
-    string
   end
 
   def full?

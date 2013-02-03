@@ -1,6 +1,5 @@
 $: << File.expand_path(File.dirname(__FILE__) + "/../lib/")
-require "game_builder"
+require "cli/cli_game"
 
-builder = GameBuilder.new(Kernel)
-game = builder.build
+game = CliGame.new($stdin, $stdout)
 game.run

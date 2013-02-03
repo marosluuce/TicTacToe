@@ -1,15 +1,13 @@
 require "spec_helper"
 require "board"
 require "game"
-require "uiwrapper"
-require "stringio"
 
 describe Game do
   let(:board) { Board.tic_tac_toe }
   let(:player1) { "fake_player1" }
   let(:player2) { "fake_player2"}
-  let(:io) { UIWrapper.new(StringIO.new) }
-  let(:game) { Game.new([player1, player2], board, io) }
+  let(:config) { {:board => board, :players => [player1, player2]} }
+  let(:game) { Game.new.load_config(config) }
 
   before(:each) do
     player1.stub(:get_move) { board.available_squares.first }
@@ -20,60 +18,33 @@ describe Game do
     game.board.squares.count.should == 9
     game.board.width.should == 3
   end
-  it "creates at least one player" do
-    game.players.count.should > 1
+
+  it "is nil when no moves have been made" do
+    game.last_move.should == nil
   end
 
-  describe "#move" do
-    it "gets the move" do
-      game.should_receive(:get_move) { "1" }
-      game.move
-    end
-    it "validates the move" do
-      game.should_receive(:validate_move) { true }
-      game.move
-    end
-    it "does the move" do
-      game.move
-      game.board.squares[0].should_not be_nil
-    end
+  it "is the latest move when there are moves" do
+    #this test needs to be updated once game_runner is done
+    game.do_move(1)
+    game.last_move.should == 1
   end
 
-  describe "#do_move" do
-    it "makes a move" do
-      game.do_move(1, :x)
-      game.board.squares[0].should == :x
-    end
+  it "undoes the last move" do
+    game.do_move(1)
+    game.undo_last_move
+    game.last_move.should be_nil
+    game.board.squares[0].should be_nil
   end
 
-  describe "#get_move" do
-    it "gets the current players move" do
-      game.players.first.should_receive(:get_move)
-      game.get_move
-    end
+  it "makes a move" do
+    game.do_move(1)
+    game.board.squares[0].should == player1
   end
 
-  describe "#validate_move" do
-    it "gets the available squares from the board" do
-      game.board.should_receive(:available_squares) { [1, 2] }
-      game.validate_move("1")
-    end
-    it "returns false if move is not a number" do
-      game.validate_move("a").should eq(false)
-    end
-    it "returns true when move is in the available squares" do
-      game.validate_move("1").should eq(true)
-    end
-  end
-
-  describe "#turn" do
-  end
-
-  describe "#run" do
-    it "is game over after the function runs" do
-      game.run
-      game.game_over?.should eq(true)
-    end
+  it "does not make a move when the square if filled" do
+    game.do_move(1)
+    game.do_move(1)
+    game.move_history.count.should == 1
   end
 
   describe "#current_player" do
@@ -82,20 +53,14 @@ describe Game do
     end
 
     it "is the second player on the second turn" do
-      game.do_move(1, game.players.first)
+      game.do_move(1)
       game.current_player.should == game.players.last
     end
 
     it "is the first player on the third turn" do
-      set_board_to_array(board, [:x, :o, nil, nil, nil, nil, nil, nil, nil])
+      game.do_move(1)
+      game.do_move(2)
       game.current_player.should == game.players.first
-    end
-  end
-
-  describe "#draw" do
-    it "draws something" do
-      io.should_receive(:puts).at_least(:once)
-      game.draw
     end
   end
 
@@ -172,5 +137,4 @@ describe Game do
       game.winner.should be_nil
     end
   end
-
 end

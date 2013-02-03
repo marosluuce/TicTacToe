@@ -19,3 +19,7 @@ end
 def set_board_to_array(board, squares)
   squares.each_with_index { |s, i| board.set_square(i + 1, s) }
 end
+
+def make_moves(game, squares)
+  squares.each { |square| game.do_move(square) }
+end

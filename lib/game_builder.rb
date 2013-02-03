@@ -1,36 +1,33 @@
 require "game"
 require "board"
-require "uiwrapper"
 require "player"
-require "main_menu"
-require "input_strategy"
 require "dumb_strategy"
 require "negamax"
 
 class GameBuilder
-  STRATEGIES = {1 => InputStrategy, 2 => DumbStrategy, 3 => Negamax}
+  STRATEGIES = {1 => nil, 2 => DumbStrategy, 3 => Negamax}
   SYMBOLS = [:x, :o]
 
-  attr_reader :players
-
-  def initialize(io_source)
-    @io = UIWrapper.new(io_source)
-    @menu = MainMenu.new(@io, STRATEGIES)
-    @board = Board.tic_tac_toe
-    @players = SYMBOLS.map { |symbol| Player.new(symbol) }
+  def self.build(strat_nums)
+    config = {}
+    game = Game.new
+    configure_board(config)
+    configure_players(config, game, strat_nums)
+    game.load_config(config)
+    game
   end
 
-  def build
-    @menu.display_welcome
-    configure_players
-    Game.new(@players, @board, @io)
+  def self.configure_board(config)
+    config[:board] = Board.tic_tac_toe
+    config
   end
 
-  def configure_players
-    @players.each do |player|
-      choice = @menu.request_player_choice
-      strategy = STRATEGIES[choice].new(@players, @board, @io)
-      player.change_strategy(strategy)
+  def self.configure_players(config, game, strat_nums)
+    config[:players] = []
+    strat_nums.each_with_index do |num, i|
+      strategy = STRATEGIES[num].nil? ? nil : STRATEGIES[num].new(game)
+      config[:players] << Player.new(SYMBOLS[i], strategy)
     end
+    config
   end
 end

@@ -3,7 +3,7 @@ class Negamax
     "Smart AI"
   end
 
-  def initialize(game, io)
+  def initialize(game)
     @game = game
   end
 
@@ -33,9 +33,9 @@ class Negamax
     best_move = nil
     value = -999
     @game.board.available_squares.each do |square|
-      @game.board.set_square(square, @game.current_player)
+      @game.do_move(square)
       score = -negamax()
-      @game.board.set_square_nil(square)
+      @game.undo_last_move
 
       if score > value
         value = score
@@ -48,11 +48,11 @@ class Negamax
   def negamax(depth=1)
     return score_game(@game.current_player) if @game.game_over?
 
-    value = -9999
+    value = -999
     @game.board.available_squares.each do |square|
-      @game.board.set_square(square, @game.current_player)
+      @game.do_move(square)
       value = [value, -negamax(depth+1)].max
-      @game.board.set_square_nil(square)
+      @game.undo_last_move
     end
     value /= Float(depth)
   end

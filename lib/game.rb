@@ -1,44 +1,31 @@
 class Game
-  attr_reader :board, :players
+  attr_reader :board, :players, :move_history
 
-  def initialize(players, board, io)
-    @board = board
-    @players = players
-    @io = io
+  def initialize
+    @move_history = []
   end
 
-  def do_move(i, sym)
-    @board.set_square(i.to_i, sym)
+  def load_config(config)
+    @board = config[:board]
+    @players = config[:players]
+    self
   end
 
-  # Game shouldn't be handling this anymore. Probably get rid of everything
-  # except do_move.
-  def move
-    begin
-      move = get_move
-    end while not validate_move(move)
-    do_move(move, current_player)
+  def last_move
+    @move_history.last
   end
 
-  def get_move
-    current_player.get_move
+  def undo_last_move
+    move = @move_history.pop
+    @board.set_square(move, nil)
   end
 
-  def validate_move(move)
-    @board.available_squares.include? move.to_i
-  end
-
-  # This needs to die for the sake of control. Game runner controls all!
-  def run
-    draw
-    until game_over?
-      turn
+  # I don't like this whole off by one thing...Maybe move to hash?
+  def do_move(square)
+    if @board.squares[square - 1].nil?
+      @board.set_square(square, current_player)
+      @move_history << square
     end
-  end
-
-  def turn
-    move
-    draw
   end
 
   def draw?
@@ -78,17 +65,6 @@ class Game
   end
 
   def current_player
-    @board.squares.compact.count.even? ? @players.first : @players.last
-  end
-
-  # DIE FUNCTION!
-  def draw
-    @io.print_last_move(@board.last_move)
-    if game_over?
-      @io.print_winner(winner)
-    else
-      @io.print_turn(@players.first)
-    end
-    @io.puts "#{@board}"
+    @players[@move_history.count % @players.count]
   end
 end

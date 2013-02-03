@@ -1,14 +1,9 @@
 class DumbStrategy
-  def self.to_s
-    "Dumb AI"
+  def initialize(game)
+    @game = game
   end
 
-  # Need to replace players & board with game
-  def initialize(players, board, io)
-    @board = board
-  end
-
-  def get_move(calling_player)
-    @board.available_squares.first
+  def get_move
+    @game.board.available_squares.first
   end
 end
