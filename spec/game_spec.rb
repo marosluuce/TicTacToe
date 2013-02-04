@@ -24,7 +24,6 @@ describe Game do
   end
 
   it "is the latest move when there are moves" do
-    #this test needs to be updated once game_runner is done
     game.do_move(1)
     game.last_move.should == 1
   end
