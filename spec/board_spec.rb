@@ -10,10 +10,18 @@ describe Board do
     board.squares.count.should == length * width
   end
 
-  describe "#set_square" do
+  describe "#make_move" do
     it "sets the square to value" do
-      board.set_square(1, :x)
+      board.make_move(1, :x)
       board.squares[0].should == :x
+    end
+  end
+
+  describe "#undo_move" do
+    it "sets a square to nil" do
+      board.make_move(1, :x)
+      board.undo_move(1)
+      board.squares[0].should be_nil
     end
   end
 
@@ -24,14 +32,14 @@ describe Board do
     end
   end
 
-  describe "#available_squares" do
+  describe "#available_moves" do
     it "returns [] when squares are full" do
       fill_board_with_symbol(board, :x)
-      board.available_squares.should eq([])
+      board.available_moves.should eq([])
     end
     it "returns [1,2,4,5,6,7,8,9] when 3 is taken" do
-      board.set_square(3, :x)
-      board.available_squares.should eq([1, 2, 4, 5, 6, 7, 8, 9])
+      board.make_move(3, :x)
+      board.available_moves.should eq([1, 2, 4, 5, 6, 7, 8, 9])
     end
   end
 
@@ -40,7 +48,7 @@ describe Board do
       board.full?.should eq(false)
     end
     it "returns false when some squares are full" do
-      board.set_square(1, :x)
+      board.make_move(1, :x)
       board.full?.should eq(false)
     end
     it "returns true when all squares are full" do
@@ -54,7 +62,7 @@ describe Board do
       board.empty?.should be_true
     end
     it "is false when not empty" do
-      board.set_square(1, :x)
+      board.make_move(1, :x)
       board.empty?.should be_false
     end
   end

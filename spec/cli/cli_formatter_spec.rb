@@ -16,7 +16,7 @@ describe CliFormatter do
       end
 
       it "returns the value when the square has a value" do
-        @one_board.set_square(1, :x)
+        @one_board.make_move(1, :x)
         CliFormatter.board(@one_board).should == "x"
       end
     end
@@ -31,8 +31,8 @@ describe CliFormatter do
       end
 
       it "returns \"x|o\" for [:x, :o]" do
-        @two_board.set_square(1, :x)
-        @two_board.set_square(2, :o)
+        @two_board.make_move(1, :x)
+        @two_board.make_move(2, :o)
         CliFormatter.board(@two_board).should == "x|o"
       end
     end

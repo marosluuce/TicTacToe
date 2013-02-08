@@ -11,13 +11,15 @@ class Board
     @width = width
   end
 
-  def set_square(square, symbol)
-    if square > 0 && square < @squares.count + 1
-      @squares[square-1] = symbol
-    end
+  def make_move(square, symbol)
+    @squares[square-1] = symbol
   end
 
-  def available_squares
+  def undo_move(square)
+    @squares[square-1] = nil
+  end
+
+  def available_moves
     @squares.each_with_index.map do |square, index|
       square.nil? ? index + 1 : nil
     end.compact

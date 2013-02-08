@@ -26,4 +26,10 @@ describe CliMenu do
     menu.prompt_choices
     fake_io.string.should == CliMenu::CHOICES_PROMPT
   end
+
+  it "displays the board" do
+    board = Board.tic_tac_toe
+    menu.board(board)
+    fake_io.string.should include(CliFormatter::board(board))
+  end
 end

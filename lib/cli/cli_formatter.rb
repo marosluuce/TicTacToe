@@ -28,10 +28,8 @@ class CliFormatter
   end
 
   def self.player_choices(choices)
-    string = ""
-    choices.each_with_index do |choice, index|
+    choices.each_with_index.inject("") do |string, (choice, index)|
       string << "#{index+1}. #{choice}\n"
     end
-    string
   end
 end

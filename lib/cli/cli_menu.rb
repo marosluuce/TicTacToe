@@ -19,4 +19,18 @@ class CliMenu
   def prompt_choices
     @clio.prompt CHOICES_PROMPT
   end
+
+  def board(board)
+    @clio.puts CliFormatter.board(board)
+  end
+
+  def show_turn(game)
+    @clio.puts CliFormatter.last_move(game.last_move)
+    if game.game_over?
+      @clio.puts CliFormatter.winner(game.winner)
+    else
+      @clio.puts CliFormatter.current_player(game.current_player)
+    end
+    board(game.board)
+  end
 end

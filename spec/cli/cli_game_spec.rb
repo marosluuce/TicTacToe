@@ -1,25 +1,31 @@
 require "cli/cli_game"
+require "options"
 require "stringio"
 
 describe CliGame do
   let(:fake_input) { StringIO.new }
   let(:ttt) { CliGame.new(fake_input, fake_input) }
 
-  # A little bit of a hack. Probably means this should be elsewhere.
-  # Actualy, still broken. Need more tests. Should have written them before
-  # but I'm still working out how stuff should be and I'm tired... :(
   before(:each) do
-    fake_input.string = "2\n2\n"
+    # I don't like this mock so much...
+    #@game = Game.tic_tac_toe
+    @game = mock(Game, :game_over? => true)
+    Game.stub(:new).and_return(@game)
+    @menu = mock(CliMenu, :draw_game => nil)
+    CliMenu.stub(:new).and_return(@menu)
+    ttt.stub(:move_sources).and_return([Options::PLAYER_CHOICES[1], Options::PLAYER_CHOICES[1]])
   end
 
   it "is game_over when run ends" do
     ttt.run
-    ttt.runner.game_over?.should eq(true)
+    @game.game_over?.should eq(true)
   end
 
-  describe "#get_move" do
-    it "get's the current player's h" do
+  it "gets the current player's move" do
+  end
 
-    end
+  it "draws the current state" do
+    @menu.should_receive(:draw_game).with(@game)
+    ttt.draw
   end
 end
