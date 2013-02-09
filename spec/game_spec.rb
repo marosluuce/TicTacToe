@@ -19,7 +19,7 @@ describe Game do
 
   it "makes a move" do
     game.make_move(1)
-    board.squares[0].should == players.first
+    board.square(1).should == players.first
   end
 
   it "does not update the history for an invalid move" do
@@ -28,9 +28,9 @@ describe Game do
   end
 
   it "does not make an invalid move" do
-    count = board.squares.count
+    count = board.size
     game.make_move(-10)
-    board.squares.count.should == count
+    board.size.should == count
   end
 
   it "checks if the game is over" do
@@ -67,6 +67,6 @@ describe Game do
 
   it "is false for an invalid move" do
     game.valid_move?(-1).should eq(false)
-    game.valid_move?(board.squares.count + 1).should eq(false)
+    game.valid_move?(board.size + 1).should eq(false)
   end
 end

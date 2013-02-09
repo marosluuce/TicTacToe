@@ -81,12 +81,12 @@ describe Rules do
   end
 end
 
-class MockPlayer
-  def initialize(board)
-    @board = board
-  end
+#class MockPlayer
+  #def initialize(board)
+    #@board = board
+  #end
 
-  def get_move
-    @board.available_moves.first
-  end
-end
+  #def get_move
+    #@board.available_moves.first
+  #end
+#end

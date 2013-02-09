@@ -15,4 +15,9 @@ class CliIO
   def prompt(msg)
     @output.print msg
   end
+
+  def request_input(msg)
+    @output.print msg
+    gets
+  end
 end

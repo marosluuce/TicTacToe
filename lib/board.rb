@@ -11,6 +11,14 @@ class Board
     @width = width
   end
 
+  def size
+    @squares.count
+  end
+
+  def square(number)
+    @squares[number - 1]
+  end
+
   def make_move(square, symbol)
     @squares[square-1] = symbol
   end

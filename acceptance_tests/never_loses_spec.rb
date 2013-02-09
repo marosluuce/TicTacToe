@@ -5,7 +5,7 @@ require "game"
 
 describe "AI Never Loses" do
   it "never loses with negamax strategy" do
-    game = Game.new
+    game = Game.
     board = Board.tic_tac_toe
     ai = Player.new(:o, HardAIStrategy.new(game))
     game.load_config({:board => board, :players => [:x, ai]})

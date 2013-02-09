@@ -1,6 +1,6 @@
 def fill_board_with_symbol(board, symbol)
-  board.squares.each_index do |i|
-    board.make_move(i+1, symbol)
+  board.size.times do |n|
+    board.make_move(n+1, symbol)
   end
 end
 

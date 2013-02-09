@@ -11,6 +11,9 @@ class Rules
     @board.full? || !winner.nil?
   end
 
+  # TODO - Split this function up. The individual selectors could be
+  #        functions in Board. Not sure how you'd know how many lines
+  #        there were. Probably the length or width could tell you.
   def winner
     possible_wins = []
     (0...@board.width).each do |n|
@@ -25,7 +28,7 @@ class Rules
       end.uniq
       possible_wins << @board.squares.select.with_index do |s, i|
         i % (@board.width - 1) == 0 &&
-        i != 0 && i != (@board.squares.count - 1)
+        i != 0 && i != (@board.size - 1)
       end.uniq
     end
 

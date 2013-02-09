@@ -7,29 +7,32 @@ describe Board do
   let(:board) { Board.new(length, width) }
 
   it "has squares with length equal to length * width" do
-    board.squares.count.should == length * width
+    board.size.should == length * width
   end
 
-  describe "#make_move" do
-    it "sets the square to value" do
-      board.make_move(1, :x)
-      board.squares[0].should == :x
-    end
+  it "is the number of squares" do
+    board.size.should == 9
   end
 
-  describe "#undo_move" do
-    it "sets a square to nil" do
-      board.make_move(1, :x)
-      board.undo_move(1)
-      board.squares[0].should be_nil
-    end
+  it "is the value of the square" do
+    board.make_move(1, :x)
+    board.square(1).should == :x
   end
 
-  describe "self.tic_tac_toe" do
-    it "returns a 3x3 board" do
-      ttt_board = Board.tic_tac_toe
-      ttt_board.squares.count.should == 9
-    end
+  it "sets the square to value" do
+    board.make_move(1, :x)
+    board.square(1).should == :x
+  end
+
+  it "sets a square to nil" do
+    board.make_move(1, :x)
+    board.undo_move(1)
+    board.square(1).should be_nil
+  end
+
+  it "returns a 3x3 board" do
+    ttt_board = Board.tic_tac_toe
+    ttt_board.size.should == 9
   end
 
   describe "#available_moves" do
