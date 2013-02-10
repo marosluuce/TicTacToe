@@ -1,5 +1,4 @@
 require "cli/console"
-require "cli/formatter"
 require "cli/console_io"
 require "cli/mock_io"
 require "board"

@@ -1,9 +1,7 @@
 # TODO Figure out when files need to be explicitly required for a test.
 require "cli/tic_tac_toe"
-require "cli/console_io"
 require "cli/mock_io"
 require "easy_ai"
-require "options"
 
 describe TicTacToe do
   let(:fake_io) { MockIO.new }
