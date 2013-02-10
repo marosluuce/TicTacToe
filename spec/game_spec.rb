@@ -23,13 +23,24 @@ describe Game do
   end
 
   it "does not update the history for an invalid move" do
-    game.make_move(-1)
+    begin
+      game.make_move(-1)
+    rescue InvalidMoveException
+    end
     game.move_history.count.should == 0
+  end
+
+  it "raises an error if move is invalud" do
+    game.stub(:valid_move?).and_return(false)
+    expect { game.make_move(1) }.to raise_error(InvalidMoveException)
   end
 
   it "does not make an invalid move" do
     count = board.size
-    game.make_move(-10)
+    begin
+      game.make_move(-10)
+    rescue InvalidMoveException
+    end
     board.size.should == count
   end
 

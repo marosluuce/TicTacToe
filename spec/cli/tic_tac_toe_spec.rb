@@ -1,22 +1,23 @@
-require "cli/cli_game"
-require "cli/cli_io"
+# TODO Figure out when files need to be explicitly required for a test.
+require "cli/tic_tac_toe"
+require "cli/console_io"
 require "cli/mock_io"
 require "easy_ai"
 require "options"
 
-describe CliGame do
+describe TicTacToe do
   let(:fake_io) { MockIO.new }
-  let(:ttt) { CliGame.new(fake_io, fake_io) }
+  let(:ttt) { TicTacToe.new(fake_io, fake_io) }
 
   before(:each) do
     @game = Game.tic_tac_toe
-    @clio = CliIO.new(fake_io, fake_io)
-    @menu = CliMenu.new(@clio)
+    @clio = ConsoleIO.new(fake_io, fake_io)
+    @console = Console.new(@clio)
     Game.stub(:new).and_return(@game)
-    CliIO.stub(:new).and_return(@clio)
-    CliMenu.stub(:new).and_return(@menu)
-    # TODO move hash creation into cli_game or runner.
-    @menu.stub(:request_players).and_return({@game.players.first => EasyAI, @game.players.last => EasyAI})
+    ConsoleIO.stub(:new).and_return(@clio)
+    Console.stub(:new).and_return(@console)
+    # TODO move hash creation into tic_tac_toe or runner.
+    @console.stub(:request_players).and_return({@game.players.first => EasyAI, @game.players.last => EasyAI})
   end
 
   it "is game_over when run ends" do
@@ -25,7 +26,7 @@ describe CliGame do
   end
 
   it "draws the game" do
-    @menu.should_receive(:draw_game).with(@game)
+    @console.should_receive(:draw_game).with(@game)
     ttt.draw
   end
 
@@ -47,8 +48,14 @@ describe CliGame do
     end
 
     it "makes asks for input if the current player if type is nil" do
-      @menu.stub(:request_players).and_return({})
-      @clio.should_receive(:request_input)
+      @console.stub(:request_players).and_return({})
+      @clio.should_receive(:request_input).and_return(1)
+      ttt.make_move
+    end
+
+    it "prings a message when it receives InvalidMoveException" do
+      @game.stub(:make_move).and_raise(InvalidMoveException)
+      @console.should_receive(:invalid_input)
       ttt.make_move
     end
   end

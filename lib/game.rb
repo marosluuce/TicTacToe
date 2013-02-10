@@ -3,6 +3,9 @@ require "board"
 require "rules"
 require "player"
 
+class InvalidMoveException < Exception
+end
+
 class Game
   attr_reader :board, :move_history, :players
 
@@ -24,6 +27,8 @@ class Game
     if valid_move?(move)
       @board.make_move(move, current_player)
       @move_history.add_move(move)
+    else
+      raise InvalidMoveException
     end
   end
 

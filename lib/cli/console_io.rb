@@ -1,4 +1,4 @@
-class CliIO
+class ConsoleIO
   def initialize(input, output)
     @input = input
     @output = output

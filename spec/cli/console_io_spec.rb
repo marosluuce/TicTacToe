@@ -1,9 +1,9 @@
-require "cli/cli_io"
+require "cli/console_io"
 require "cli/mock_io"
 
-describe CliIO do
+describe ConsoleIO do
   let(:fake_io) { MockIO.new }
-  let(:clio) { CliIO.new(fake_io, fake_io) }
+  let(:clio) { ConsoleIO.new(fake_io, fake_io) }
 
   it "outputs a message" do
     clio.puts "message"

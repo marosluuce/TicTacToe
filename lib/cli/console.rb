@@ -1,9 +1,9 @@
-require "cli/cli_formatter"
+require "cli/formatter"
 
-# TODO Rename to CliConsole
-class CliMenu
+class Console
   GREETING = "Welcome to Tic-Tac-Toe!"
   CHOICES_PROMPT = "Enter your choice: "
+  INVALID_INPUT = "Invalid input!"
 
   def initialize(clio)
     @clio = clio
@@ -15,7 +15,7 @@ class CliMenu
 
   # These two functions may not be necessary
   def show_choices(choices)
-    @clio.prompt CliFormatter.player_choices(choices)
+    @clio.prompt Formatter.player_choices(choices)
   end
 
   def prompt_choices
@@ -23,19 +23,24 @@ class CliMenu
   end
 
   def board(board)
-    @clio.puts CliFormatter.board(board)
+    @clio.puts Formatter.board(board)
+  end
+
+  def invalid_input
+    @clio.puts INVALID_INPUT
   end
 
   def draw_game(game)
-    @clio.puts CliFormatter.last_move(game.last_move)
+    @clio.puts Formatter.last_move(game.last_move)
     if game.game_over?
-      @clio.puts CliFormatter.winner(game.winner)
+      @clio.puts Formatter.winner(game.winner)
     else
-      @clio.puts CliFormatter.current_player(game.current_player)
+      @clio.puts Formatter.current_player(game.current_player)
     end
     board(game.board)
   end
 
+  # TODO Split this method up so that it's easier to read.
   def request_players(players, options)
     Hash[
       players.collect do |player|

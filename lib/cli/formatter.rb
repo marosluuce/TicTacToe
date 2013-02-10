@@ -1,4 +1,4 @@
-class CliFormatter
+class Formatter
   CURRENT_PLAYER = "%s's Turn!"
   LAST_MOVE = "Last Move: %d"
   WINNER = "%s Won!"
