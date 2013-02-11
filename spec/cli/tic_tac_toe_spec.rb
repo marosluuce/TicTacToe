@@ -1,4 +1,3 @@
-# TODO Figure out when files need to be explicitly required for a test.
 require "cli/tic_tac_toe"
 require "cli/mock_io"
 require "easy_ai"
@@ -15,12 +14,26 @@ describe TicTacToe do
     ConsoleIO.stub(:new).and_return(@clio)
     Console.stub(:new).and_return(@console)
     # TODO move hash creation into tic_tac_toe or runner.
-    @console.stub(:request_players).and_return({@game.players.first => EasyAI, @game.players.last => EasyAI})
+    @console.stub(:select_player_types).and_return({@game.players.first => EasyAI, @game.players.last => EasyAI})
   end
 
-  it "is game_over when run ends" do
+  it "prepares for the game" do
+    @console.should_receive(:greet)
+    ttt.should_receive(:select_players)
+    @console.should_receive(:board)
+    ttt.prepare_for_game
+  end
+
+  it "prepares and takes turns until the game is over" do
+    ttt.should_receive(:prepare_for_game)
     ttt.run
     @game.game_over?.should eq(true)
+  end
+
+  it "takes a turn" do
+    ttt.should_receive(:make_move)
+    ttt.should_receive(:draw)
+    ttt.take_turn
   end
 
   it "draws the game" do
@@ -46,7 +59,7 @@ describe TicTacToe do
     end
 
     it "makes asks for input if the current player if type is nil" do
-      @console.stub(:request_players).and_return({})
+      @console.stub(:select_player_types).and_return({})
       @clio.should_receive(:request_input).and_return(1)
       ttt.make_move
     end

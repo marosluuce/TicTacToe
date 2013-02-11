@@ -41,23 +41,44 @@ describe Console do
 
   it "draws the game state"
 
-  describe "#request_players" do
+  it "handles player type selection" do
+    fake_io.input << 1 << 1
+    @players = [mock(Player), mock(Player)]
+
+    selection = console.select_player_types(@players, Options)
+    selection.each do |player, type|
+      @players.should include(player)
+      Options.player_types.should include(type)
+    end
+  end
+
+  describe "#request_player" do
     before(:each) do
-      @players = [mock(Player), mock(Player)]
+      @player = mock(Player)
+    end
+
+    it "shows the player's options" do
+      fake_io.input << 1
+      console.should_receive(:show_choices)
+      console.request_player(@player, Options)
     end
 
     it "requests the user's input" do
-      clio.should_receive(:request_input).twice.and_return("1\n")
-      console.request_players(@players, Options)
+      clio.should_receive(:request_input).and_return("1\n")
+      console.request_player(@player, Options)
     end
 
-    it "stores the user's valid choice" do
-      fake_io.input << Options.player_types.count + 1 << 1 << 2
-      choices = console.request_players(@players, Options)
-      choices.keys.should == @players
-      choices.each do |_, type|
-        Options.player_types.should include(type)
-      end
+    it "stores the player and type when given valid input" do
+      fake_io.input << Options.player_types.count + 1 << 1
+      console.request_player(@player, Options).should == {@player => Options.player_types[0] }
     end
+  end
+
+  it "is false when an invalid choice is made" do
+    console.valid_choice?(1, [2, 3]).should eq(false)
+  end
+
+  it "is true when valid choice is made" do
+    console.valid_choice?(1, [1, 2]).should eq(true)
   end
 end

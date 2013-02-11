@@ -30,6 +30,7 @@ class Console
     @clio.puts INVALID_INPUT
   end
 
+  # TODO Rework this a bit...not sure how yet...
   def draw_game(game)
     @clio.puts Formatter.last_move(game.last_move)
     if game.game_over?
@@ -41,16 +42,22 @@ class Console
   end
 
   # TODO Split this method up so that it's easier to read.
-  def request_players(players, options)
-    Hash[
-      players.collect do |player|
-        choice = nil
-        begin
-          show_choices(options.player_names)
-          choice = @clio.request_input(CHOICES_PROMPT).to_i - 1
-        end until options.player_types.each_index.include?(choice)
-        [player, options.player_types[choice]]
-      end
-    ]
+  def select_player_types(players, options)
+    players.inject({}) do |hash, player|
+      hash.merge(request_player(player, options))
+    end
+  end
+
+  def request_player(player, options)
+    selection = nil
+    begin
+      show_choices(options.player_names)
+      selection = @clio.request_input(CHOICES_PROMPT).to_i - 1
+    end until valid_choice?(selection, options.player_choices)
+    {player => options.player_types[selection]}
+  end
+
+  def valid_choice?(selection, choices)
+    choices.include?(selection)
   end
 end

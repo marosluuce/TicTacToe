@@ -7,8 +7,6 @@ class Options
     "Easy AI" => EasyAI,
     "Hard AI" => HardAI
   }
-  PLAYER_NAMES = ["Human", "Easy AI", "Hard AI"]
-  PLAYER_TYPES = [nil, EasyAI, HardAI]
 
   def self.player_names
     PLAYERS.keys
@@ -16,5 +14,10 @@ class Options
 
   def self.player_types
     PLAYERS.values
+  end
+
+  # This could be named better.
+  def self.player_choices
+    PLAYERS.map.with_index { |_, i| i }
   end
 end

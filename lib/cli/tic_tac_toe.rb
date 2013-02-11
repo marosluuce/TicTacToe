@@ -9,22 +9,29 @@ class TicTacToe
   def initialize(input, output)
     @clio = ConsoleIO.new(input, output)
     @console = Console.new(@clio)
-    #@console.greet
     @game = Game.tic_tac_toe
+  end
+
+  def prepare_for_game
+    @console.greet
     select_players
+    @console.board(@game.board)
   end
 
   def run
-    # This line shouldn't live here.
-    #@console.board(@game.board)
+    prepare_for_game
     until @game.game_over?
-      make_move
-      draw
+      take_turn
     end
   end
 
+  def take_turn
+    make_move
+    draw
+  end
+
   def select_players
-    @players = @console.request_players(@game.players, Options)
+    @players = @console.select_player_types(@game.players, Options)
   end
 
   def make_move
