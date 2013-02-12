@@ -25,12 +25,12 @@ describe TicTacToe do
   end
 
   it "prepares and takes turns until the game is over" do
-    ttt.should_receive(:prepare_for_game)
     ttt.run
     @game.game_over?.should eq(true)
   end
 
   it "takes a turn" do
+    ttt.prepare_for_game
     ttt.should_receive(:make_move)
     ttt.should_receive(:draw)
     ttt.take_turn
@@ -52,6 +52,7 @@ describe TicTacToe do
 
   describe "#make_move" do
     it "makes the move of the current player if type is not nil" do
+      ttt.prepare_for_game
       player = ttt.players[@game.current_player]
       player.should_receive(:get_move).and_return(1)
       @game.should_receive(:make_move).with(1)
@@ -60,11 +61,13 @@ describe TicTacToe do
 
     it "makes asks for input if the current player if type is nil" do
       @console.stub(:select_player_types).and_return({})
+      ttt.prepare_for_game
       @clio.should_receive(:request_input).and_return(1)
       ttt.make_move
     end
 
     it "prings a message when it receives InvalidMoveException" do
+      ttt.prepare_for_game
       @game.stub(:make_move).and_raise(InvalidMoveException)
       @console.should_receive(:invalid_input)
       ttt.make_move

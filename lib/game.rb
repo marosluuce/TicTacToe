@@ -33,7 +33,11 @@ class Game
   end
 
   def valid_move?(move)
-    @board.available_moves.include? move
+    if !game_over?
+      @board.available_moves.include? move
+    else
+      false
+    end
   end
 
   def last_move
@@ -51,6 +55,10 @@ class Game
 
   def current_player
     @players[@move_history.count % @players.count]
+  end
+
+  def draw?
+    @rules.draw?
   end
 
   def winner

@@ -18,6 +18,8 @@ class TicTacToe
     @console.board(@game.board)
   end
 
+  # This file should probably only have prepare_for_game and run.
+  # All the other methods can be in the runner class...?
   def run
     prepare_for_game
     until @game.game_over?

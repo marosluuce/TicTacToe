@@ -41,7 +41,6 @@ class Console
     board(game.board)
   end
 
-  # TODO Split this method up so that it's easier to read.
   def select_player_types(players, options)
     players.inject({}) do |hash, player|
       hash.merge(request_player(player, options))

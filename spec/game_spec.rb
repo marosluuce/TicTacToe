@@ -35,6 +35,11 @@ describe Game do
     expect { game.make_move(1) }.to raise_error(InvalidMoveException)
   end
 
+  it "is an invalid move if the game is over" do
+    game.stub(:game_over?).and_return(true)
+    game.valid_move?(1).should eq(false)
+  end
+
   it "does not make an invalid move" do
     count = board.size
     begin
@@ -54,6 +59,10 @@ describe Game do
 
   it "gets the winner" do
     game.winner.should == rules.winner
+  end
+
+  it "checks if the game is a draw" do
+    game.draw?.should == rules.draw?
   end
 
   it "is nil when no moves have been made" do
