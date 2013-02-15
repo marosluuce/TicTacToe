@@ -2,22 +2,24 @@ require "cli/console"
 require "cli/console_io"
 require "cli/mock_io"
 require "board"
+require "game"
 require "player"
+require "easy_ai"
 require "options"
 
-# Might rename this to display or something.
-# It might actually output all info.
 describe Console do
   let(:fake_io) { MockIO.new }
-  let(:clio) { ConsoleIO.new(fake_io, fake_io) }
-  let(:console) { Console.new(clio) }
+  let(:io) { ConsoleIO.new(fake_io, fake_io) }
+  let(:options) { Options.new(EasyAI) }
+  let(:console) { Console.new(io) }
+  let(:game) { Game.tic_tac_toe }
 
-  it "displays a greeting" do
+  it "consoles a greeting" do
     console.greet
     fake_io.output.should include("#{Console::GREETING}\n")
   end
 
-  it "displays the player choices" do
+  it "consoles the player choices" do
     choices = ["Human", "AI"]
     console.show_choices(choices)
     fake_io.output.should include(Formatter::player_choices(choices))
@@ -28,57 +30,63 @@ describe Console do
     fake_io.output.should include(Console::CHOICES_PROMPT)
   end
 
-  it "displays the board" do
+  it "consoles the board" do
     board = Board.tic_tac_toe
     console.board(board)
     fake_io.output.should include("#{Formatter::board(board)}\n")
   end
 
-  it "displays a message for invalid input" do
+  it "consoles a message for invalid input" do
     console.invalid_input
     fake_io.output.should include("#{Console::INVALID_INPUT}\n")
   end
 
-  it "draws the game state"
+  describe "#draw_game" do
+    it "outputs the last move" do
+      console.draw_game(game)
+      fake_io.output.should include("#{Formatter.last_move(game.last_move)}\n")
+    end
 
-  it "handles player type selection" do
-    fake_io.input << 1 << 1
-    @players = [mock(Player), mock(Player)]
+    it "outputs the board state" do
+      console.draw_game(game)
+      fake_io.output.should include("#{Formatter.board(game.board)}\n")
+    end
 
-    selection = console.select_player_types(@players, Options)
-    selection.each do |player, type|
-      @players.should include(player)
-      Options.player_types.should include(type)
+    it "outputs the winner if the game is over" do
+      game.stub(:game_over?).and_return(true)
+      game.stub(:winner).and_return("x")
+      console.draw_game(game)
+      fake_io.output.should include("#{Formatter.winner(game.winner)}\n")
+    end
+
+    it "outputs the current player if game is not over" do
+      console.draw_game(game)
+      fake_io.output.should include("#{Formatter.current_player(game.current_player)}\n")
     end
   end
 
+  it "selects a type for a number of players" do
+    player_count = 2
+    players = console.select_player_types(player_count, options)
+    players.count.should == player_count
+  end
+
   describe "#request_player" do
-    before(:each) do
-      @player = mock(Player)
+    it "request a choice for player when given valid input" do
+      fake_io.input << "aaa" << 2
+      choice = console.request_player(options)
+      options.player_types.should include(choice)
     end
 
     it "shows the player's options" do
       fake_io.input << 1
-      console.should_receive(:show_choices)
-      console.request_player(@player, Options)
+      console.should_receive(:show_choices).exactly(fake_io.input.count)
+      console.request_player(options)
     end
 
     it "requests the user's input" do
-      clio.should_receive(:request_input).and_return("1\n")
-      console.request_player(@player, Options)
+      io.should_receive(:request_input).and_return("1\n")
+      console.request_player(options)
     end
-
-    it "stores the player and type when given valid input" do
-      fake_io.input << Options.player_types.count + 1 << 1
-      console.request_player(@player, Options).should == {@player => Options.player_types[0] }
-    end
-  end
-
-  it "is false when an invalid choice is made" do
-    console.valid_choice?(1, [2, 3]).should eq(false)
-  end
-
-  it "is true when valid choice is made" do
-    console.valid_choice?(1, [1, 2]).should eq(true)
   end
 end

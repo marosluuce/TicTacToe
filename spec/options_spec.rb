@@ -1,16 +1,17 @@
 require "options"
 
 describe Options do
+  let(:options) { Options.new("fake_human") }
+
   it "is a list of player names" do
-    Options.player_names.should == Options::PLAYERS.keys
+    options.player_names.each { |name| name.should be_an_instance_of String }
   end
 
   it "is a list of player types" do
-    Options.player_types.should == Options::PLAYERS.values
+    options.player_types.each { |type| type.should_not be_nil }
   end
 
-  it "is a list of valid numberical choices for players" do
-    stub_const("Options::PLAYERS", {"a" => nil, 3 => nil})
-    Options.player_choices.should == [0, 1]
+  it "is a list of types from given choices" do
+    options.players_from_choices([0, 1]).should == [EasyAI, HardAI]
   end
 end

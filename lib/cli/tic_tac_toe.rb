@@ -1,7 +1,9 @@
 require "cli/console_io"
 require "cli/console"
+require "cli/human"
 require "game"
 require "options"
+require "game_runner"
 
 class TicTacToe
   attr_reader :players
@@ -10,47 +12,24 @@ class TicTacToe
     @clio = ConsoleIO.new(input, output)
     @console = Console.new(@clio)
     @game = Game.tic_tac_toe
+    @options = Options.new(Human.new(@console))
   end
 
-  def prepare_for_game
+  def run
     @console.greet
     select_players
-    @console.board(@game.board)
-  end
+    @runner = GameRunner.new(@game, @players, Proc.new { |game| @console.draw_game(game) })
 
-  # This file should probably only have prepare_for_game and run.
-  # All the other methods can be in the runner class...?
-  def run
-    prepare_for_game
     until @game.game_over?
-      take_turn
+      begin
+        @runner.take_turn
+      rescue InvalidMoveException
+        @console.invalid_input
+      end
     end
   end
 
-  def take_turn
-    make_move
-    draw
-  end
-
   def select_players
-    @players = @console.select_player_types(@game.players, Options)
-  end
-
-  def make_move
-    player = @players[@game.current_player]
-    move =
-      if player.nil?
-        # This may want to live in console.
-        @clio.request_input("Enter your move: ").to_i
-      else
-        player.get_move(@game)
-      end
-    @game.make_move(move)
-  rescue InvalidMoveException
-    @console.invalid_input
-  end
-
-  def draw
-    @console.draw_game(@game)
+    @players = @console.select_player_types(@game.players.count, @options)
   end
 end

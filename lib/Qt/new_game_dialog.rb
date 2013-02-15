@@ -1,6 +1,8 @@
 require "Qt4"
 
 class NewGameDialog < Qt::Dialog
+  attr_reader :player_choices
+
   def initialize(choices)
     super()
     @choices = choices.map { |choice| tr(choice) }

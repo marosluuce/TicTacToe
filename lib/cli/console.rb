@@ -3,60 +3,61 @@ require "cli/formatter"
 class Console
   GREETING = "Welcome to Tic-Tac-Toe!"
   CHOICES_PROMPT = "Enter your choice: "
+  MOVE_PROMPT = "Enter your move: "
   INVALID_INPUT = "Invalid input!"
 
-  def initialize(clio)
-    @clio = clio
+  def initialize(io)
+    @io = io
   end
 
   def greet
-    @clio.puts GREETING
+    @io.puts GREETING
   end
 
   # These two functions may not be necessary
   def show_choices(choices)
-    @clio.prompt Formatter.player_choices(choices)
+    @io.prompt Formatter.player_choices(choices)
   end
 
   def prompt_choices
-    @clio.prompt CHOICES_PROMPT
+    @io.prompt CHOICES_PROMPT
   end
 
   def board(board)
-    @clio.puts Formatter.board(board)
+    @io.puts Formatter.board(board)
   end
 
   def invalid_input
-    @clio.puts INVALID_INPUT
+    @io.puts INVALID_INPUT
+  end
+
+  def prompt_move
+    @io.prompt MOVE_PROMPT
+    @io.gets
   end
 
   # TODO Rework this a bit...not sure how yet...
   def draw_game(game)
-    @clio.puts Formatter.last_move(game.last_move)
+    @io.puts Formatter.last_move(game.last_move)
     if game.game_over?
-      @clio.puts Formatter.winner(game.winner)
+      @io.puts Formatter.winner(game.winner)
     else
-      @clio.puts Formatter.current_player(game.current_player)
+      @io.puts Formatter.current_player(game.current_player)
     end
     board(game.board)
   end
 
-  def select_player_types(players, options)
-    players.inject({}) do |hash, player|
-      hash.merge(request_player(player, options))
-    end
+  def select_player_types(player_count, options)
+    Array.new(player_count).map { |_| request_player(options) }
   end
 
-  def request_player(player, options)
-    selection = nil
-    begin
+  def request_player(options)
+    choice = nil
+    until options.player_types.include?(choice)
       show_choices(options.player_names)
-      selection = @clio.request_input(CHOICES_PROMPT).to_i - 1
-    end until valid_choice?(selection, options.player_choices)
-    {player => options.player_types[selection]}
-  end
-
-  def valid_choice?(selection, choices)
-    choices.include?(selection)
+      selection = @io.request_input(CHOICES_PROMPT).to_i - 1
+      choice = options.player_types[selection]
+    end
+    choice
   end
 end

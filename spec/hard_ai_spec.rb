@@ -1,10 +1,16 @@
 require "hard_ai"
-require "board"
+require "game_runner"
 require "game"
 require "spec_helper"
 
 describe HardAI do
   let(:game) { Game.tic_tac_toe }
+
+  it "gets a move and gives it to the game runner" do
+    runner = mock(GameRunner, :game => game, :make_move => nil)
+    runner.should_receive(:make_move).with(5)
+    HardAI.request_move(runner)
+  end
 
   describe "#get_move" do
     it "picks a valid move" do

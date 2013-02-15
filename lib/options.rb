@@ -3,21 +3,24 @@ require "hard_ai"
 
 class Options
   PLAYERS = {
-    "Human" => nil,
     "Easy AI" => EasyAI,
     "Hard AI" => HardAI
   }
 
-  def self.player_names
-    PLAYERS.keys
+  def initialize(human)
+    @players = PLAYERS
+    @players["Human"] = human
   end
 
-  def self.player_types
-    PLAYERS.values
+  def player_names
+    @players.keys
   end
 
-  # This could be named better.
-  def self.player_choices
-    PLAYERS.map.with_index { |_, i| i }
+  def player_types
+    @players.values
+  end
+
+  def players_from_choices(choices)
+    choices.map { |choice| player_types[choice] }
   end
 end

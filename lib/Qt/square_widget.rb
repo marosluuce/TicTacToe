@@ -8,19 +8,18 @@ class SquareWidget < Qt::Label
 
     @name = "SquareWidget"
     @index = index
+    @game_wrapper = game_wrapper
 
     set_style_sheet("background-color: #ABD; font-size: 50px")
     set_alignment(Qt::AlignCenter)
 
-    # Not sure if I like this because it still sends input to
-    # the game.
     connect(SIGNAL(:clicked)) do
-      begin
-        game_wrapper.make_move(@index)
-        set_text game_wrapper.square(@index).to_s
-        update
-      rescue InvalidMoveException
-      end
+      game_wrapper.make_move(@index)
+      update
+    end
+
+    @game_wrapper.connect(SIGNAL(:updated)) do
+      set_text @game_wrapper.square(@index).to_s
     end
   end
 
