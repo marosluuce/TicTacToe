@@ -36,7 +36,6 @@ class Console
     @io.gets
   end
 
-  # TODO Rework this a bit...not sure how yet...
   def draw_game(game)
     @io.puts Formatter.last_move(game.last_move)
     if game.game_over?

@@ -3,14 +3,11 @@ require "Qt/board_widget"
 require "Qt/new_game_dialog"
 require "Qt/human"
 require "Qt/game_wrapper"
-require "Qt/experiments"
+require "Qt/overlay"
 
 class MainWindow < Qt::MainWindow
   def initialize(title=nil, size=[640, 480])
     super()
-
-    self.window_title = title
-    resize(*size)
 
     @human = QtHuman.new
     @options = Options.new(@human)
@@ -18,11 +15,17 @@ class MainWindow < Qt::MainWindow
     @board = BoardWidget.new(@game_wrapper)
     @overlay = Overlay.new(@board)
 
+    @current_player = Qt::Label.new
+    @last_move = Qt::Label.new
+
     create_actions
     setup_menus
     setup_connections
 
+    self.window_title = title
+    resize(*size)
     show
+
     prompt_new_game_dialog
   end
 
@@ -37,8 +40,9 @@ class MainWindow < Qt::MainWindow
     file.add_action(@new_game)
     file.add_action(@quit)
 
-    self.status_bar
-    self.status_bar.set_size_grip_enabled(false)
+    status_bar.add_widget(@current_player)
+    status_bar.add_widget(@last_move)
+    status_bar.set_size_grip_enabled(false)
   end
 
   def setup_connections
@@ -47,6 +51,10 @@ class MainWindow < Qt::MainWindow
     @game_wrapper.connect(SIGNAL("game_over(QString)")) do |message|
       @overlay.set_text(message)
       @overlay.show
+    end
+    @game_wrapper.connect(SIGNAL(:updated)) do
+      @last_move.text = "Last Move: #{@game_wrapper.last_move}"
+      @current_player.text = "Current Player: #{@game_wrapper.current_player.upcase}"
     end
     @human.connect(SIGNAL(:unlock)) { @board.set_enabled(true) }
   end
@@ -63,11 +71,12 @@ class MainWindow < Qt::MainWindow
   end
 
   def create_new_game(choices)
-    players = @options.players_from_choices(choices)
-    @game_wrapper.new_game(players)
+    @game_wrapper.new_game(@options.players_from_choices(choices))
     @overlay.hide
-    set_central_widget(@board)
     @board.set_enabled(false)
+    @board.squares.each { |child| child.set_enabled(true) }
+
+    set_central_widget(@board)
     @game_wrapper.take_turn
   end
 

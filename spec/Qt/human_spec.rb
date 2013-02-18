@@ -5,5 +5,4 @@ describe QtHuman do
     human = QtHuman.new
     human.should respond_to(:request_move)
   end
-
 end

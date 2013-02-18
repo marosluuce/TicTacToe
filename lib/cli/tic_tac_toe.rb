@@ -6,7 +6,7 @@ require "options"
 require "game_runner"
 
 class TicTacToe
-  attr_reader :players
+  attr_reader :runner
 
   def initialize(input, output)
     @clio = ConsoleIO.new(input, output)
@@ -15,21 +15,24 @@ class TicTacToe
     @options = Options.new(Human.new(@console))
   end
 
-  def run
+  def prepare_game
     @console.greet
-    select_players
-    @runner = GameRunner.new(@game, @players, Proc.new { |game| @console.draw_game(game) })
+    @runner = GameRunner.new(@game, select_players, Proc.new { |game| @console.draw_game(game) })
+  end
 
+  def run
     until @game.game_over?
-      begin
-        @runner.take_turn
-      rescue InvalidMoveException
-        @console.invalid_input
-      end
+      take_turn
     end
   end
 
+  def take_turn
+    @runner.take_turn
+  rescue InvalidMoveException
+    @console.invalid_input
+  end
+
   def select_players
-    @players = @console.select_player_types(@game.players.count, @options)
+    @console.select_player_types(@game.players.count, @options)
   end
 end

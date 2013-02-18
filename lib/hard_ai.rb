@@ -25,7 +25,6 @@ class HardAI
     end
   end
 
-  # I still don't like this duplication...
   def self.run_negamax(game)
     best_move = nil
     value = -999

@@ -1,3 +1,4 @@
+require "spec_helper"
 require "game_runner"
 require "easy_ai"
 
@@ -6,17 +7,33 @@ describe GameRunner do
   let(:players) { [EasyAI, EasyAI] }
   let(:runner) { GameRunner.new(game, players) }
 
-
   it "is a mapping of player to strategy" do
-    runner.players.keys.should == game.players
-    runner.players.values.each do |type|
+    @test_runner = GameRunner.new(game, [])
+    @test_runner.set_players(players)
+    @test_runner.players.keys.should == game.players
+    @test_runner.players.values.each do |type|
       type.should respond_to(:get_move)
     end
   end
 
-  it "takes turns until the game is over" do
-    runner.take_turn
-    game.game_over?.should == true
+  describe "#take_turn" do
+    before(:each) do
+      @easy_ai = EasyAI
+      @fake_ai = mock("FakeAI")
+      runner.set_players([@easy_ai, @fake_ai])
+    end
+
+    it "takes a turn and stops when the game is over" do
+      make_moves(game, [1, 4, 2, 5])
+      @easy_ai.stub(:get_move).and_return(3)
+      @fake_ai.should_not_receive(:request_move)
+      runner.take_turn
+    end
+
+    it "takes a turn and repeats if the game is not over" do
+      @fake_ai.should_receive(:request_move).with(runner)
+      runner.take_turn
+    end
   end
 
   it "makes the given move" do

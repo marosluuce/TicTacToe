@@ -22,21 +22,26 @@ class GameWrapper < Qt::Object
 
   def update
     if @game.game_over?
-      #TODO Put this under test
-      message = if @game.draw?
-                  "Draw!"
-                else
-                  winner = @game.winner.to_s
-                  "#{winner.upcase} Won!"
-                end
-      emit game_over(message)
+      emit game_over(end_game_message)
     end
     emit updated
+  end
+
+  def end_game_message
+    @game.draw? ? "Draw!" : "#{@game.winner.to_s.upcase} Won!"
   end
 
   def make_move(move)
     @runner.make_move(move)
   rescue InvalidMoveException
+  end
+
+  def last_move
+    @game.last_move
+  end
+
+  def current_player
+    @game.current_player.to_s
   end
 
   def square(number)

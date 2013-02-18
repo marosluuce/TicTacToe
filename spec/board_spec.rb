@@ -50,10 +50,12 @@ describe Board do
     it "returns false when all squares are empty" do
       board.full?.should eq(false)
     end
+
     it "returns false when some squares are full" do
       board.make_move(1, :x)
       board.full?.should eq(false)
     end
+
     it "returns true when all squares are full" do
       fill_board_with_symbol(board, :x)
       board.full?.should eq(true)
@@ -64,6 +66,7 @@ describe Board do
     it "is true when empty" do
       board.empty?.should be_true
     end
+
     it "is false when not empty" do
       board.make_move(1, :x)
       board.empty?.should be_false

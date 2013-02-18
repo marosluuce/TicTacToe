@@ -6,12 +6,12 @@ class GameRunner
 
   def initialize(game, chosen_player_types, block=Proc.new{})
     @game = game
-    @players = set_players(chosen_player_types)
     @block = block
+    set_players(chosen_player_types)
   end
 
   def set_players(chosen_player_types)
-    Hash[@game.players.zip(chosen_player_types)]
+    @players = Hash[@game.players.zip(chosen_player_types)]
   end
 
   def take_turn

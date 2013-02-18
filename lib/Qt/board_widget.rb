@@ -7,7 +7,19 @@ class BoardWidget < Qt::Widget
 
     grid_layout = Qt::GridLayout.new(self)
     (0...game_wrapper.board_size).each do |index|
-      grid_layout.add_widget(SquareWidget.new(index+1, game_wrapper), index / 3, index % 3)
+      square = SquareWidget.new(index+1, game_wrapper)
+
+      square.connect(SIGNAL(:clicked)) do
+        square.set_enabled(false)
+        set_enabled(false)
+        game_wrapper.make_move(index+1)
+      end
+
+      grid_layout.add_widget(square, index / 3, index % 3)
     end
+  end
+
+  def squares
+    children.select { |child| child.instance_of? SquareWidget }
   end
 end
