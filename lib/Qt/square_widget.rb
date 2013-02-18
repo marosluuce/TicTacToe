@@ -14,6 +14,7 @@ class SquareWidget < Qt::Label
 
     game_wrapper.connect(SIGNAL(:updated)) do
       set_text game_wrapper.square(@index).to_s
+      set_enabled(false) unless text.nil?
     end
   end
 

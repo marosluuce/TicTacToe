@@ -10,7 +10,7 @@ class BoardWidget < Qt::Widget
       square = SquareWidget.new(index+1, game_wrapper)
 
       square.connect(SIGNAL(:clicked)) do
-        square.set_enabled(false)
+        #square.set_enabled(false)
         set_enabled(false)
         game_wrapper.make_move(index+1)
       end
