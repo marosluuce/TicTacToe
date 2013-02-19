@@ -13,7 +13,7 @@ class GameWrapper < Qt::Object
 
   def new_game(players)
     @game = Game.tic_tac_toe
-    @runner = GameRunner.new(@game, players, Proc.new { update; Qt::CoreApplication.processEvents })
+    @runner = GameRunner.new(@game, players, Proc.new { update })#; Qt::CoreApplication.processEvents })
   end
 
   def take_turn
@@ -24,6 +24,7 @@ class GameWrapper < Qt::Object
     if @game.game_over?
       emit game_over(end_game_message)
     end
+    p Time.now
     emit updated
   end
 

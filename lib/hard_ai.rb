@@ -1,5 +1,6 @@
 class HardAI
   def self.request_move(runner)
+    sleep 5
     move = get_move(runner.game)
     runner.make_move(move)
   end
