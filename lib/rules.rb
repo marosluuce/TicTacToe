@@ -11,9 +11,6 @@ class Rules
     @board.full? || !winner.nil?
   end
 
-  # TODO - Split this function up. The individual selectors could be
-  #        functions in Board. Not sure how you'd know how many lines
-  #        there were. Probably the length or width could tell you.
   def winner
     possible_wins = []
     (0...@board.width).each do |n|

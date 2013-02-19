@@ -34,6 +34,7 @@ class GameWrapper < Qt::Object
   def make_move(move)
     @runner.make_move(move)
   rescue InvalidMoveException
+    @runner.take_turn
   end
 
   def last_move
@@ -45,7 +46,7 @@ class GameWrapper < Qt::Object
   end
 
   def square(number)
-    @game.board.square(number)
+    @game.board.square(number).to_s
   end
 
   def board_size

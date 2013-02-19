@@ -6,7 +6,6 @@ class NewGameDialog < Qt::Dialog
   def initialize(choices)
     super()
     @choices = choices.map { |choice| tr(choice) }
-    # TODO Is this a hack? Need to guarantee that we're always checking the first value.
     @player_choices = [0, 0]
   end
 

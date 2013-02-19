@@ -1,24 +1,25 @@
 require "Qt4"
 
 class SquareWidget < Qt::Label
-  signals :clicked
+  signals "clicked(int)"
 
   def initialize(index, game_wrapper)
     super()
 
     @name = "SquareWidget"
     @index = index
+    @game_wrapper = game_wrapper
 
     set_style_sheet("background-color: #ABD; font-size: 50px")
     set_alignment(Qt::AlignCenter)
-
-    game_wrapper.connect(SIGNAL(:updated)) do
-      set_text game_wrapper.square(@index).to_s
-      set_enabled(false) unless text.nil?
-    end
   end
 
   def mousePressEvent(event)
-    emit clicked
+    emit clicked(@index)
+  end
+
+  def paintEvent(event)
+    set_text @game_wrapper.square(@index)
+    super(event)
   end
 end

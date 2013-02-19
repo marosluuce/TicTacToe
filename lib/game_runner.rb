@@ -18,7 +18,7 @@ class GameRunner
     @block.call(@game)
 
     unless @game.game_over?
-      move = current_move_source.request_move(self)
+      current_move_source.request_move(self)
     end
   end
 

@@ -48,6 +48,7 @@ class MainWindow < Qt::MainWindow
   def setup_connections
     @new_game.connect(SIGNAL(:triggered)) { prompt_new_game_dialog }
     @quit.connect(SIGNAL(:triggered)) { Qt::Application.instance.quit }
+
     @game_wrapper.connect(SIGNAL("game_over(QString)")) do |message|
       @overlay.set_text(message)
       @overlay.show
@@ -56,7 +57,17 @@ class MainWindow < Qt::MainWindow
       @last_move.text = "Last Move: #{@game_wrapper.last_move}"
       @current_player.text = "Current Player: #{@game_wrapper.current_player.upcase}"
     end
+
     @human.connect(SIGNAL(:unlock)) { @board.set_enabled(true) }
+
+    @board.squares.each do |square|
+      square.connect(SIGNAL("clicked(int)")) do |move|
+        @board.set_enabled(false)
+        @game_wrapper.make_move(move)
+      end
+
+      @game_wrapper.connect(SIGNAL(:updated)) { square.update }
+    end
   end
 
   def prompt_new_game_dialog
@@ -74,7 +85,6 @@ class MainWindow < Qt::MainWindow
     @game_wrapper.new_game(@options.players_from_choices(choices))
     @overlay.hide
     @board.set_enabled(false)
-    @board.squares.each { |child| child.set_enabled(true) }
 
     set_central_widget(@board)
     @game_wrapper.take_turn
