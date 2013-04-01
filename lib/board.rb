@@ -6,7 +6,7 @@ class Board
   end
 
   def initialize(length, width)
-    @squares = Array.new(length * width) 
+    @squares = Array.new(length * width)
     @length = length
     @width = width
   end

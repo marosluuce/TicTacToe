@@ -14,7 +14,6 @@ class Console
     @io.puts GREETING
   end
 
-  # These two functions may not be necessary
   def show_choices(choices)
     @io.prompt Formatter.player_choices(choices)
   end

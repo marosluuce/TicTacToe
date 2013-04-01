@@ -1,4 +1,3 @@
-# May need to handle resize event
 class Overlay < Qt::Label
   def initialize(parent)
     super(parent)

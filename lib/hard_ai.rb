@@ -26,19 +26,13 @@ class HardAI
   end
 
   def self.run_negamax(game)
-    best_move = nil
-    value = -999
-    game.board.available_moves.each do |square|
+    scores = game.board.available_moves.reduce({}) do |results, square|
       game.make_move(square)
       score = -negamax(game)
       game.undo_last_move
-
-      if score > value
-        value = score
-        best_move = square
-      end
+      results.merge({square => score})
     end
-    best_move
+    scores.key(scores.values.max)
   end
 
   def self.negamax(game, depth=1)
